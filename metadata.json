@@ -1,0 +1,5 @@
+{
+  "name": "Peeng",
+  "description": "Highly-polished infrastructure monitoring dashboard inspired by Stripe, BetterStack, and Vercel.",
+  "requestFramePermissions": []
+}
