@@ -1,19 +1,18 @@
-import React from 'react';
+import { useAuth } from '@/src/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useAppState } from '../../context/StateContext';
 
 export function FeaturesPage() {
-  // const { user } = useAppState();
+  const { user, isAuthenticated } = useAuth()
+
   const navigate = useNavigate();
 
-  // const handlePrimaryCta = () => {
-  //   if (user && user.loggedIn) {
-  //     navigate('/dashboard');
-  //   } else {
-  //     navigate('/auth/login');
-  //   }
-  // };
-
+  const handlePrimaryCta = () => {
+    if (user && isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth/login');
+    }
+  };
   return (
     <div className="bg-slate-950 text-slate-100 min-h-screen font-sans select-none relative pb-16">
 

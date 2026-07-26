@@ -1,7 +1,6 @@
+import { MonitorHttpType, MonitorStatus, MonitorType } from "./monitor";
 
-export type MonitorType = "HTTP" | "TCP" | "PING" | "DNS";
-export type MonitorStatus = "UP" | "DOWN" | "DEGRADED" | "PAUSED" | "PENDING";
-export type MonitorHttpType = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD";
+
 export type IncidentStatus = "OPEN" | "INVESTIGATING" | "RESOLVED" | "MONITORING";
 export type MonitorLifeycle = "ACTIVE" | "DELETED" | "PAUSED"
 export interface DashboardOverview {

@@ -14,17 +14,12 @@ export function MarketingFooter() {
           {/* Column 1: Brand & Tagline */}
           <div className="space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded bg-indigo-600 flex items-center justify-center text-white">
-                <Activity className="w-4 h-4" />
-              </div>
               <span className="font-bold tracking-tight text-white font-mono text-base">PEENG</span>
             </div>
             <p className="text-slate-500 leading-relaxed text-xs">
               Open-source uptime monitoring and real-time endpoint status checking for developer infrastructure.
             </p>
-            <p className="text-[11px] text-slate-500 font-mono">
-              MIT Licensed Open Source Software
-            </p>
+
           </div>
 
           {/* Column 2: Platform Features */}
@@ -87,7 +82,7 @@ export function MarketingFooter() {
             <ul className="space-y-2 text-slate-400">
               <li>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/sulaimondawood/Peeng"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-white transition-colors flex items-center gap-1.5"
@@ -96,7 +91,7 @@ export function MarketingFooter() {
                   <span>GitHub Repository</span>
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="https://github.com"
                   target="_blank"
@@ -117,7 +112,7 @@ export function MarketingFooter() {
                   <Terminal className="w-3.5 h-3.5 text-indigo-400" />
                   <span>Release Notes v1.2</span>
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -126,13 +121,13 @@ export function MarketingFooter() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500">
           <div>
-            &copy; {currentYear} Peeng Monitoring System. Built under the MIT Open Source License.
+            &copy; {currentYear} Peeng Monitoring System.
           </div>
-          <div className="flex items-center gap-4 text-xs">
+          {/* <div className="flex items-center gap-4 text-xs">
             <Link to="/features" className="hover:text-slate-300 transition-colors">Privacy Policy</Link>
             <span>•</span>
             <Link to="/features" className="hover:text-slate-300 transition-colors">Terms of Service</Link>
-          </div>
+          </div> */}
         </div>
 
       </div>

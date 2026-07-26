@@ -1,99 +1,55 @@
-import { useAppState } from '@/src/context/StateContext';
-import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+import { PATHS } from '@/src/utils/routes/paths';
+import { useAcceptInvite, useInvitePreview } from '../../team/hooks/use-team';
 
-export interface InvitationState {
-  isValid: boolean | null;
-  loading: boolean;
-  error: string | null;
-  workspaceName: string | null;
-  inviteeEmail: string | null;
-}
+export function useInvitation(token: string) {
+  const navigate = useNavigate();
 
-export function useInvitation(token: string | null) {
-  const { addToast } = useAppState();
-  const [state, setState] = useState<InvitationState>({
-    isValid: null,
-    loading: true,
-    error: null,
-    workspaceName: null,
-    inviteeEmail: null,
-  });
+  const {
+    data: preview,
+    isLoading: loading,
+    isError,
+    error: queryError,
+  } = useInvitePreview(token);
 
-  useEffect(() => {
-    if (!token) {
-      setState({
-        isValid: false,
-        loading: false,
-        error: 'Secured authentication link is missing or structural token parameter was not provided.',
-        workspaceName: null,
-        inviteeEmail: null,
-      });
-      return;
-    }
+  const acceptMutation = useAcceptInvite();
 
-    // Simulate verification API lookup (GET /api/v1/public/invitations/verify?token=...)
-    setState(prev => ({ ...prev, loading: true, error: null }));
-    const timer = setTimeout(() => {
-      if (token.toLowerCase() === 'invalid' || token.toLowerCase() === 'expired') {
-        setState({
-          isValid: false,
-          loading: false,
-          error: 'This invitation token has expired or has already been consumed. Please contact your workspace administrator to issue a new invite.',
-          workspaceName: null,
-          inviteeEmail: null,
-        });
-        addToast('Invitation validation failed: Token expired/invalid.', 'error');
-      } else {
-        // Successful mock token verification and payload retrieval
-        // Let's decode or derive some mock data based on token if needed
-        let email = 'oncall-operator@acme.com';
-        let workspace = 'Acme Corp';
 
-        if (token.includes('_')) {
-          const parts = token.split('_');
-          if (parts[0]) email = parts[0] + '@acme.com';
-          if (parts[1]) workspace = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
-        }
+  const isMissingToken = !token || token.trim().length === 0;
 
-        setState({
-          isValid: true,
-          loading: false,
-          error: null,
-          workspaceName: workspace,
-          inviteeEmail: email,
-        });
-        addToast(`Successfully validated link for workspace '${workspace}'.`, 'success');
+  const errorMessage = isMissingToken
+    ? 'No invitation token was provided in the link.'
+    : queryError
+      ? (queryError as AxiosError<{ message?: string }>).response?.data?.message ||
+      'This invitation signature is invalid, corrupted, or has expired.'
+      : null;
+
+  const acceptInvitation = async (formData: { name: string; password?: string }) => {
+    if (!token) return;
+
+    acceptMutation.mutate(
+      {
+        token,
+        name: formData.name,
+        password: formData.password,
+      },
+      {
+        onSuccess: () => {
+          navigate(PATHS.AUTH.LOGIN, { replace: true });
+        },
       }
-    }, 1200);
-
-    return () => clearTimeout(timer);
-  }, [token]);
-
-  const acceptInvitation = async (password: string): Promise<boolean> => {
-    setState(prev => ({ ...prev, loading: true }));
-
-    // Simulate POST /api/v1/public/invitations/accept
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setState(prev => ({ ...prev, loading: false }));
-        addToast('Operator credentials established. Workspace enrollment complete.', 'success');
-        resolve(true);
-      }, 1500);
-    });
+    );
   };
 
-  // const resendInvitation = (id: string) => {
-  //   resendInvite(id);
-  // };
-
-  // const deleteInvitation = (id: string) => {
-  //   removeMember(id);
-  // };
-
   return {
-    ...state,
+    isValid: Boolean(preview && !isError && !isMissingToken),
+    loading: isMissingToken ? false : loading,
+    error: errorMessage,
+    workspaceName: preview?.workspaceName || '',
+    inviteeEmail: preview?.email || '',
+    isAlreadyRegistered: preview?.isAlreadyRegistered || false,
+    isSubmitting: acceptMutation.isPending,
     acceptInvitation,
-    // resendInvitation,
-    // deleteInvitation,
   };
 }

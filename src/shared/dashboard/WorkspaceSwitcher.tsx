@@ -1,6 +1,8 @@
 import { MembershipSession } from "@/src/types/auth";
+import { PATHS } from "@/src/utils/routes/paths";
 import { Check, ChevronDown, LogOut, Plus } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 interface WorkspaceSwitcherProps {
@@ -8,7 +10,6 @@ interface WorkspaceSwitcherProps {
     currentMembership: MembershipSession | null;
     memberships: MembershipSession[];
     onSelectWorkspace: (membership: MembershipSession) => void;
-    onCreateWorkspace: (name: string) => void;
     onLogout: () => void;
 }
 
@@ -17,21 +18,11 @@ export function WorkspaceSwitcher({
     currentMembership,
     memberships,
     onSelectWorkspace,
-    onCreateWorkspace,
     onLogout,
 }: WorkspaceSwitcherProps) {
     const [open, setOpen] = useState(false);
-    const [isCreating, setIsCreating] = useState(false);
-    const [newWorkspaceName, setNewWorkspaceName] = useState("");
+    const navigate = useNavigate()
 
-    const handleCreate = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newWorkspaceName.trim()) return;
-        onCreateWorkspace(newWorkspaceName.trim());
-        setNewWorkspaceName("");
-        setIsCreating(false);
-        setOpen(false);
-    };
 
     if (!currentMembership) {
         return null;
@@ -99,7 +90,9 @@ export function WorkspaceSwitcher({
 
                     <div className="border-t border-zinc-800 my-1 pt-1 space-y-0.5">
                         <button
-                            onClick={() => setIsCreating(true)}
+                            onClick={() =>
+                                navigate(PATHS.ONBOARDING.NO_WORKSPACE)
+                            }
                             className="flex items-center gap-2 w-full px-2 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800 rounded transition-colors"
                         >
                             <Plus className="w-3.5 h-3.5" /> Create Workspace
@@ -118,55 +111,7 @@ export function WorkspaceSwitcher({
                 </div>
             )}
 
-            {isCreating && (
-                <div className="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
-                    <form
-                        onSubmit={handleCreate}
-                        className="bg-zinc-900 border border-zinc-800 p-5 rounded-lg max-w-sm w-full space-y-4"
-                    >
-                        <div>
-                            <h3 className="text-sm font-semibold text-white">
-                                Create Workspace
-                            </h3>
-                            <p className="text-xs text-zinc-400 mt-1">
-                                Enter a workspace name to organize your monitors.
-                            </p>
-                        </div>
 
-                        <div>
-                            <label className="block text-xs font-mono uppercase text-zinc-400 mb-1">
-                                Workspace Name
-                            </label>
-                            <input
-                                type="text"
-                                required
-                                autoFocus
-                                className="w-full px-3 py-2 text-xs bg-zinc-950 border border-zinc-800 rounded text-white focus:outline-none focus:border-zinc-600"
-                                placeholder="e.g. Acme API Services"
-                                value={newWorkspaceName}
-                                onChange={(e) => setNewWorkspaceName(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="flex justify-end gap-2 text-xs">
-                            <button
-                                type="button"
-                                onClick={() => setIsCreating(false)}
-                                className="px-3 py-1.5 rounded border border-zinc-800 text-zinc-400 hover:text-white"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={!newWorkspaceName.trim()}
-                                className="px-3 py-1.5 rounded bg-white text-black font-semibold disabled:opacity-50"
-                            >
-                                Create
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            )}
         </div>
     );
 }

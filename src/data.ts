@@ -3,8 +3,8 @@ import { Monitor, Incident, Member, Invoice, CheckHistoryItem } from './types';
 export const INITIAL_MONITORS: Monitor[] = [
   {
     id: 'mon-1',
-    name: 'Acme Frontend SPA',
-    url: 'https://acme.com',
+    name: 'peeng Frontend SPA',
+    url: 'https://peeng.com',
     status: 'UP',
     interval: 30,
     timeout: 3000,
@@ -24,8 +24,8 @@ export const INITIAL_MONITORS: Monitor[] = [
   },
   {
     id: 'mon-2',
-    name: 'Acme Auth Service',
-    url: 'https://api.acme.com/v1/auth',
+    name: 'peeng Auth Service',
+    url: 'https://api.peeng.com/v1/auth',
     status: 'UP',
     interval: 30,
     timeout: 2000,
@@ -45,8 +45,8 @@ export const INITIAL_MONITORS: Monitor[] = [
   },
   {
     id: 'mon-3',
-    name: 'Acme Database API Node',
-    url: 'https://db-node.acme.internal/healthz',
+    name: 'peeng Database API Node',
+    url: 'https://db-node.peeng.internal/healthz',
     status: 'DOWN',
     interval: 15,
     timeout: 5000,
@@ -61,8 +61,8 @@ export const INITIAL_MONITORS: Monitor[] = [
   },
   {
     id: 'mon-4',
-    name: 'Acme Payment Webhook Handler',
-    url: 'https://hooks.stripe.com/acme-callback',
+    name: 'peeng Payment Webhook Handler',
+    url: 'https://hooks.stripe.com/peeng-callback',
     status: 'PAUSED',
     interval: 60,
     timeout: 4000,
@@ -77,8 +77,8 @@ export const INITIAL_MONITORS: Monitor[] = [
   },
   {
     id: 'mon-5',
-    name: 'Acme Search Service (Elastic)',
-    url: 'https://search.acme.com/_cluster/health',
+    name: 'peeng Search Service (Elastic)',
+    url: 'https://search.peeng.com/_cluster/health',
     status: 'PENDING',
     interval: 30,
     timeout: 2000,
@@ -128,7 +128,7 @@ export const INITIAL_INCIDENTS: Incident[] = [
     id: 'inc-1',
     title: 'Database connection pools exhausted',
     monitorId: 'mon-3',
-    monitorName: 'Acme Database API Node',
+    monitorName: 'peeng Database API Node',
     status: 'OPEN',
     severity: 'CRITICAL',
     openedAt: new Date(Date.now() - 3600000).toISOString(), // 1h ago
@@ -137,7 +137,7 @@ export const INITIAL_INCIDENTS: Incident[] = [
         id: 't-1',
         timestamp: new Date(Date.now() - 3600000).toISOString(),
         title: 'Incident opened automatically',
-        description: 'Monitor Acme Database API Node detected active status DOWN (Expected 200, received 503 Service unavailable).'
+        description: 'Monitor peeng Database API Node detected active status DOWN (Expected 200, received 503 Service unavailable).'
       },
       {
         id: 't-2',
@@ -157,7 +157,7 @@ export const INITIAL_INCIDENTS: Incident[] = [
     id: 'inc-2',
     title: 'Frontend CDN asset spike latency',
     monitorId: 'mon-1',
-    monitorName: 'Acme Frontend SPA',
+    monitorName: 'peeng Frontend SPA',
     status: 'RESOLVED',
     severity: 'WARNING',
     openedAt: new Date(Date.now() - 7200000).toISOString(), // 2h ago
@@ -167,7 +167,7 @@ export const INITIAL_INCIDENTS: Incident[] = [
         id: 't-4',
         timestamp: new Date(Date.now() - 7200000).toISOString(),
         title: 'Performance degradation alert',
-        description: 'Monitor Acme Frontend SPA average response time exceeded 2000ms threshold (measured 2410ms).'
+        description: 'Monitor peeng Frontend SPA average response time exceeded 2000ms threshold (measured 2410ms).'
       },
       {
         id: 't-5',
@@ -197,7 +197,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-2',
     name: 'Alexander V.',
-    email: 'alex@acme.com',
+    email: 'alex@peeng.com',
     role: 'admin',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop',
     status: 'active'
@@ -205,7 +205,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-3',
     name: 'Charlotte Green',
-    email: 'c.green@acme.com',
+    email: 'c.green@peeng.com',
     role: 'member',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop',
     status: 'active'
@@ -213,7 +213,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-4',
     name: 'Devon Wells (On Call)',
-    email: 'devon@acme.com',
+    email: 'devon@peeng.com',
     role: 'member',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop',
     status: 'invited'
@@ -221,7 +221,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-5',
     name: 'Marcus Sterling',
-    email: 'marcus@acme.com',
+    email: 'marcus@peeng.com',
     role: 'viewer',
     avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=96&h=96&fit=crop',
     status: 'expired'
@@ -258,20 +258,20 @@ export const INITIAL_INVOICES: Invoice[] = [
 export const STATUS_PAGES = [
   {
     id: 'sp-1',
-    name: 'Acme Status Page',
-    slug: 'acme-status',
+    name: 'peeng Status Page',
+    slug: 'peeng-status',
     logo: '⚡',
     theme: 'dark',
-    customDomain: 'status.acme.com',
+    customDomain: 'status.peeng.com',
     monitors: ['mon-1', 'mon-2', 'mon-3'],
     public: true
   }
 ];
 
 export const RECENT_ALERTS = [
-  { id: 'al-1', timestamp: '5m ago', message: 'Acme Database API Node status changed to DOWN', severity: 'critical' },
-  { id: 'al-2', timestamp: '1h ago', message: 'Acme Auth Service returned 502 Bad Gateway (automated resolve in 12s)', severity: 'warning' },
-  { id: 'al-3', timestamp: '2h ago', message: 'Acme Frontend SPA resolved Latency Alert', severity: 'info' }
+  { id: 'al-1', timestamp: '5m ago', message: 'peeng Database API Node status changed to DOWN', severity: 'critical' },
+  { id: 'al-2', timestamp: '1h ago', message: 'peeng Auth Service returned 502 Bad Gateway (automated resolve in 12s)', severity: 'warning' },
+  { id: 'al-3', timestamp: '2h ago', message: 'peeng Frontend SPA resolved Latency Alert', severity: 'info' }
 ];
 
 export const API_KEYS = [

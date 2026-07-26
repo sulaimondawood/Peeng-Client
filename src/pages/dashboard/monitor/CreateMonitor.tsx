@@ -1,113 +1,129 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Save, Globe, Info, Sliders, CheckSquare, ShieldCheck, Terminal } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Globe, Loader2, Save, Sliders, Terminal, AlertCircle } from 'lucide-react';
+import { useCreateMonitor } from './hooks/use-monitor';
+import { AxiosError, isAxiosError } from 'axios';
+import { CreateMonitorRequest, MonitorHttpType, MonitorType, TimeUnit } from '@/src/types/monitor';
+import { useAppState } from '@/src/context/StateContext';
+import { PATHS } from '@/src/utils/routes/paths';
+
 
 export default function CreateMonitor() {
+  const navigate = useNavigate();
+  const createMonitorMutation = useCreateMonitor();
 
-  // Field states
-  const [name, setName] = useState('Acme Core Authentication Endpoint');
-  const [url, setUrl] = useState('https://auth.acme.com/v2/health');
-  const [interval, setIntervalVal] = useState<number>(30); // in seconds
-  const [timeout, setTimeoutVal] = useState<number>(2000); // in ms
-  const [expectedStatus, setExpectedStatus] = useState<number>(200);
+  // Form Field States matching backend CreateMonitorRequest DTO
+  const [name, setName] = useState('');
+  const [url, setUrl] = useState('');
+  const [method, setMethod] = useState<MonitorHttpType>('GET');
+  const [monitorType, setMonitorType] = useState<MonitorType>('HTTP');
+  const [intervalValue, setIntervalValue] = useState<number>(60);
+  const [intervalUnit, setIntervalUnit] = useState<TimeUnit>('SECONDS');
+  const [timeoutSeconds, setTimeoutSeconds] = useState<number>(5);
+  const [expectedStatusCode, setExpectedStatusCode] = useState<number>(200);
   const [expectedKeyword, setExpectedKeyword] = useState('');
-  const [failureThreshold, setFailureThreshold] = useState<number>(2);
-  const [recoveryThreshold, setRecoveryThreshold] = useState<number>(2);
-  const [tagInput, setTagInput] = useState('production, authentication');
-
+  const [failureThreshold, setFailureThreshold] = useState<number>(3);
+  const [recoveryThreshold, setRecoveryThreshold] = useState<number>(1);
   const [validationError, setValidationError] = useState('');
+  const { addToast } = useAppState();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setValidationError('Please configure a descriptive monitor identifier name.');
-    if (!url.trim()) return setValidationError('A target endpoint validation host URL is required.');
 
-    // Quick URL validation check
+    if (!name.trim()) {
+      return setValidationError('Please enter a monitor name.');
+    }
+    if (!url.trim()) {
+      return setValidationError('Please enter a target URL.');
+    }
+
     try {
       new URL(url);
     } catch {
-      return setValidationError('Host target is not a valid fully-qualified URI. Ensure you include the protocol, e.g. https://');
+      return setValidationError('Target URL is invalid. Please include the protocol (e.g. https://).');
     }
 
     setValidationError('');
 
-    // Parse tag inputs
-    const tags = tagInput
-      .split(',')
-      .map(t => t.trim().toLowerCase())
-      .filter(t => t.length > 0);
+    const payload: CreateMonitorRequest = {
+      name: name.trim(),
+      url: url.trim(),
+      method,
+      monitorType,
+      intervalValue,
+      intervalUnit,
+      timeoutSeconds,
+      failureThreshold,
+      recoveryThreshold,
+      expectedStatusCode,
+      expectedKeyword: expectedKeyword.trim() || undefined,
+    };
 
-    // createMonitor({
-    //   name,
-    //   url,
-    //   interval,
-    //   timeout,
-    //   expectedStatus,
-    //   expectedKeyword,
-    //   failureThreshold,
-    //   recoveryThreshold,
-    //   tags
-    // });
-
-    // setCurrentRoute('monitors');
+    createMonitorMutation.mutate(payload, {
+      onSuccess: () => {
+        navigate(PATHS.DASHBOARD.MONITORS.LIST);
+      }
+    });
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto p-4 lg:p-6 font-sans select-none">
-
-      {/* Upper header action area */}
-      <div className="flex items-center gap-3">
+    <div className="space-y-6 max-w-7xl mx-auto p-4 lg:p-6 font-sans select-none text-zinc-100">
+      {/* Header Area */}
+      <div className="flex items-center gap-3 border-b border-zinc-800 pb-4">
         <button
-          // onClick={() => setCurrentRoute('monitors')}
-          className="p-1.5 rounded-lg border border-slate-800 bg-slate-900/40 text-slate-405 hover:text-white transition-all cursor-pointer"
+          onClick={() => navigate(-1)}
+          className="p-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h2 className="text-xl font-bold text-slate-100 font-display tracking-tight">Spawn HTTP(S) Node Tracker</h2>
-          <p className="text-xs text-slate-450 mt-0.5">Define your tracking intervals, validation assertions, and diagnostic hooks.</p>
+          <h1 className="text-xl font-bold text-white tracking-tight">Create Monitor</h1>
+          <p className="text-xs text-zinc-400 mt-0.5">
+            Configure automated health checks and threshold assertions for your API endpoints.
+          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-        {/* Form Body Fields (2 Columns) */}
+        {/* Main Form Fields */}
         <form onSubmit={handleSubmit} className="md:col-span-2 space-y-6">
-          <div className="bg-slate-900 border border-slate-850 rounded-xl p-5 md:p-6 space-y-5 shadow-2xl">
-
+          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 md:p-6 space-y-5 shadow-xl">
             {validationError && (
-              <div className="rounded-lg bg-rose-950/20 border border-rose-900/50 p-3 text-xs text-rose-400 font-mono">
-                🛑 Verification constraint error: {validationError}
+              <div className="rounded-lg bg-red-950/40 border border-red-900/60 p-3 text-xs text-red-300 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                <span>{validationError}</span>
               </div>
             )}
 
-            {/* General monitor fields layout */}
+            {/* General Settings */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-xxs font-mono uppercase tracking-wider text-slate-400 font-semibold mb-2">
-                  Monitor Label Name
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                  Monitor Name
                 </label>
                 <input
                   type="text"
                   required
-                  className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-hidden focus:border-indigo-500 transition-all font-medium"
-                  placeholder="e.g. Acme API Gateway"
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-zinc-700 transition-colors font-medium"
+                  placeholder="e.g. Authentication API Service"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xxs font-mono uppercase tracking-wider text-slate-400 font-semibold mb-2">
-                  Tracking Destination Host URL
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                  Endpoint URL
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-3 my-auto flex items-center pr-3 pointer-events-none text-slate-500">
+                  <div className="absolute inset-y-0 left-3 my-auto flex items-center pr-3 pointer-events-none text-zinc-500">
                     <Globe className="w-4 h-4" />
                   </div>
                   <input
                     type="url"
                     required
-                    className="w-full pl-10 pr-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-hidden focus:border-indigo-500 transition-all font-mono"
-                    placeholder="https://api.example.com/v1/healthz"
+                    className="w-full pl-10 pr-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-zinc-700 transition-colors font-mono"
+                    placeholder="https://api.example.com/health"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                   />
@@ -115,190 +131,229 @@ export default function CreateMonitor() {
               </div>
 
               <div>
-                <label className="block text-xxs font-mono uppercase tracking-wider text-slate-400 font-semibold mb-2">
-                  Check Schedule Interval (Seconds)
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                  HTTP Method
                 </label>
                 <select
-                  className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-hidden focus:ring-0 cursor-pointer"
-                  value={interval}
-                  onChange={(e) => setIntervalVal(Number(e.target.value))}
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none cursor-pointer font-mono"
+                  value={method}
+                  onChange={(e) => setMethod(e.target.value as MonitorHttpType)}
                 >
-                  <option value={15}>Every 15 seconds (High frequency)</option>
-                  <option value={30}>Every 30 seconds (Default)</option>
-                  <option value={60}>Every 1 minute</option>
-                  <option value={300}>Every 5 minutes</option>
-                  <option value={1800}>Every 30 minutes</option>
+                  {['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'].map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xxs font-mono uppercase tracking-wider text-slate-400 font-semibold mb-2">
-                  Validation Timeout (MS)
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                  Monitor Type
+                </label>
+                <select
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none cursor-pointer font-mono"
+                  value={monitorType}
+                  onChange={(e) => setMonitorType(e.target.value as MonitorType)}
+                >
+                  <option value="HTTP">HTTP / HTTPS</option>
+                  <option value="PING">ICMP Ping</option>
+                  <option value="PORT">TCP Port</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                  Check Interval
                 </label>
                 <input
                   type="number"
-                  min={100}
-                  max={30000}
-                  className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-hidden focus:border-indigo-500 transition-all font-mono"
-                  value={timeout}
-                  onChange={(e) => setTimeoutVal(Number(e.target.value))}
+                  min={10}
+                  required
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none font-mono"
+                  value={intervalValue}
+                  onChange={(e) => setIntervalValue(Number(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                  Interval Unit
+                </label>
+                <select
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none cursor-pointer font-mono"
+                  value={intervalUnit}
+                  onChange={(e) => setIntervalUnit(e.target.value as TimeUnit)}
+                >
+                  <option value="SECONDS">Seconds</option>
+                  <option value="MINUTES">Minutes</option>
+                  <option value="HOURS">Hours</option>
+                </select>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                  Timeout (1–15 Seconds)
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  max={15}
+                  required
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none font-mono"
+                  value={timeoutSeconds}
+                  onChange={(e) => setTimeoutSeconds(Number(e.target.value))}
                 />
               </div>
             </div>
 
-            {/* Threshold checks layout */}
-            <div className="border-t border-slate-850/80 pt-5 space-y-4">
-              <h3 className="text-xxs font-mono uppercase font-bold tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Sliders className="w-3.5 h-3.5 text-indigo-400" /> Assertion & Escalation Threshold Rules
+            {/* Assertion & Threshold Rules */}
+            <div className="border-t border-zinc-800 pt-5 space-y-4">
+              <h3 className="text-xs font-mono uppercase font-bold tracking-wider text-zinc-300 flex items-center gap-1.5">
+                <Sliders className="w-3.5 h-3.5 text-zinc-400" /> Assertion Rules & Incident Thresholds
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xxs font-mono uppercase tracking-wider text-slate-550 font-semibold mb-2">
-                    Expected HTTP Status Code
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2">
+                    Expected Status Code
                   </label>
                   <input
                     type="number"
                     min={100}
                     max={599}
-                    className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-hidden focus:border-indigo-500 transition-all font-mono"
-                    value={expectedStatus}
-                    onChange={(e) => setExpectedStatus(Number(e.target.value))}
+                    required
+                    className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none font-mono"
+                    value={expectedStatusCode}
+                    onChange={(e) => setExpectedStatusCode(Number(e.target.value))}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xxs font-mono uppercase tracking-wider text-slate-550 font-semibold mb-2 flex items-center justify-between">
-                    <span>Expected Keyword Assertion</span>
-                    <span className="text-xxxxs text-slate-500 font-normal">Optional</span>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2 flex items-center justify-between">
+                    <span>Expected Keyword</span>
+                    <span className="text-[10px] text-zinc-500 font-normal lowercase">optional</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-hidden focus:border-indigo-500 transition-all"
-                    placeholder="e.g. system_healthy / uptime"
+                    className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none"
+                    placeholder="e.g. 'status':'ok'"
                     value={expectedKeyword}
                     onChange={(e) => setExpectedKeyword(e.target.value)}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xxs font-mono uppercase tracking-wider text-slate-550 font-semibold mb-1 flex items-center justify-between">
-                    <span>Outage Failure Threshold</span>
-                    <span className="text-xxxxs text-slate-500 font-sans font-normal">{failureThreshold} fails</span>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-1 flex items-center justify-between">
+                    <span>Failure Threshold</span>
+                    <span className="text-[10px] text-zinc-400 font-mono">{failureThreshold} fails</span>
                   </label>
                   <input
                     type="range"
                     min={1}
                     max={10}
-                    className="w-full accent-indigo-500 h-1 bg-slate-850 rounded-lg cursor-pointer"
+                    className="w-full accent-white h-1 bg-zinc-800 rounded-lg cursor-pointer"
                     value={failureThreshold}
                     onChange={(e) => setFailureThreshold(Number(e.target.value))}
                   />
-                  <span className="text-xxxxs font-mono text-slate-500 block mt-1">Declares DOWN after consecutive failed checks</span>
+                  <span className="text-[10px] font-mono text-zinc-500 block mt-1">
+                    Triggers incident after consecutive check failures
+                  </span>
                 </div>
 
                 <div>
-                  <label className="block text-xxs font-mono uppercase tracking-wider text-slate-550 font-semibold mb-1 flex items-center justify-between">
-                    <span>Recovery Verification Target</span>
-                    <span className="text-xxxxs text-slate-500 font-sans font-normal">{recoveryThreshold} wins</span>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-1 flex items-center justify-between">
+                    <span>Recovery Threshold</span>
+                    <span className="text-[10px] text-zinc-400 font-mono">{recoveryThreshold} wins</span>
                   </label>
                   <input
                     type="range"
                     min={1}
-                    max={10}
-                    className="w-full accent-indigo-400 h-1 bg-slate-850 rounded-lg cursor-pointer"
+                    max={3}
+                    className="w-full accent-white h-1 bg-zinc-800 rounded-lg cursor-pointer"
                     value={recoveryThreshold}
                     onChange={(e) => setRecoveryThreshold(Number(e.target.value))}
                   />
-                  <span className="text-xxxxs font-mono text-slate-500 block mt-1">Restores status UP after validation successes</span>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="block text-xxs font-mono uppercase tracking-wider text-slate-550 font-semibold mb-2">
-                    Segmentation Tags (Comma-aligned values)
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-hidden"
-                    placeholder="e.g. staging, api, graphql"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                  />
+                  <span className="text-[10px] font-mono text-zinc-500 block mt-1">
+                    Resolves incident after successful checks
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Call to action */}
-            <div className="border-t border-slate-850/80 pt-5 flex items-center justify-end gap-3.5">
+            {/* Action Bar */}
+            <div className="border-t border-zinc-800 pt-5 flex items-center justify-end gap-3">
               <button
                 type="button"
-                // onClick={() => setCurrentRoute('monitors')}
-                className="px-4 py-2 border border-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors text-xs font-semibold cursor-pointer"
+                onClick={() => navigate(PATHS.DASHBOARD.MONITORS.LIST)}
+                className="px-4 py-2 border border-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors text-xs font-semibold cursor-pointer"
               >
-                Abort
+                Cancel
               </button>
               <button
                 type="submit"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs tracking-tight transition-all cursor-pointer shadow-md shadow-indigo-600/10"
+                disabled={createMonitorMutation.isPending}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white hover:bg-zinc-200 text-black font-semibold text-xs tracking-tight transition-colors cursor-pointer disabled:opacity-50"
               >
-                <Save className="w-4 h-4" />
-                <span>Initialize Tracker Node</span>
+                {createMonitorMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                <span>Save Monitor</span>
               </button>
             </div>
-
           </div>
         </form>
 
-        {/* Live Visual Board Preview (1 Column) */}
+        {/* Live Preview Panel */}
         <div className="space-y-4">
-          <div className="px-1 text-xxs font-mono uppercase font-semibold text-slate-450 tracking-wider">
+          <div className="px-1 text-[11px] font-mono uppercase font-semibold text-zinc-500">
             Monitor Preview
           </div>
 
-          <div className="bg-slate-900 border border-slate-850 rounded-xl p-5 space-y-4.5 shadow-xl font-sans relative overflow-hidden">
-            {/* Simulation Header Preview */}
+          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 space-y-4 shadow-xl text-xs font-sans">
             <div className="flex items-center justify-between">
-              <span className="text-xxxxs font-mono uppercase text-indigo-400 font-semibold flex items-center gap-1">
-                <Terminal className="w-3 h-3 text-indigo-400" /> Live Preview
+              <span className="text-[10px] font-mono uppercase text-zinc-400 font-semibold flex items-center gap-1">
+                <Terminal className="w-3.5 h-3.5 text-zinc-400" /> Target Summary
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
             </div>
 
             <div className="space-y-1">
-              <div className="text-sm font-bold text-slate-150 truncate leading-snug">{name || 'Monitor Name Placeholder'}</div>
-              <div className="text-xxs font-mono text-slate-500 truncate" title={url}>{url || 'https://domain.com/path'}</div>
-            </div>
-
-            {/* Preview Parameters */}
-            <div className="grid grid-cols-2 gap-3.5 border-t border-slate-850/80 pt-4 text-xxs font-mono">
-              <div>
-                <span className="text-slate-550 block text-xxxxs uppercase font-semibold">Frequency rate</span>
-                <span className="text-slate-350 block mt-0.5">{interval}s</span>
+              <div className="text-sm font-bold text-white truncate">
+                {name || 'Service Name'}
               </div>
-              <div>
-                <span className="text-slate-550 block text-xxxxs uppercase font-semibold">Acceptable Code</span>
-                <span className="text-slate-350 block mt-0.5">HTTP {expectedStatus}</span>
-              </div>
-              <div>
-                <span className="text-slate-550 block text-xxxxs uppercase font-semibold">Fail Threshold</span>
-                <span className="text-slate-350 block mt-0.5">{failureThreshold} fails</span>
-              </div>
-              <div>
-                <span className="text-slate-550 block text-xxxxs uppercase font-semibold">Target SSL Check</span>
-                <span className="text-slate-350 block mt-0.5">{url.startsWith('https://') ? 'ACTIVE (90D TLS)' : 'INACTIVE'}</span>
+              <div className="text-[11px] font-mono text-zinc-500 truncate" title={url}>
+                {url || 'https://api.domain.com/health'}
               </div>
             </div>
 
-            <div className="rounded-lg p-3 bg-slate-950 border border-slate-850 flex items-start gap-2.5">
-              <Info className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-              <p className="text-xxxxs text-slate-500 font-mono leading-relaxed uppercase">
-                Free tier accounts can register up to 10 HTTP monitor checks. Alerts are sent via Email to your account (Slack & Webhook integrations arriving in next rollout).
-              </p>
+            <div className="grid grid-cols-2 gap-3 border-t border-zinc-800 pt-4 text-[11px] font-mono">
+              <div>
+                <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Method</span>
+                <span className="text-zinc-300 block mt-0.5">{method}</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Frequency</span>
+                <span className="text-zinc-300 block mt-0.5">
+                  {intervalValue} {intervalUnit.toLowerCase()}
+                </span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Expected Code</span>
+                <span className="text-zinc-300 block mt-0.5">HTTP {expectedStatusCode}</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Timeout</span>
+                <span className="text-zinc-300 block mt-0.5">{timeoutSeconds}s</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
+
 export { CreateMonitor };

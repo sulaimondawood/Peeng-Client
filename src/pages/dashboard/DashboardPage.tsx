@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { MonitorRow } from './components/MonitorRow';
 import { useDashboardOverview, useRecentIncidents, useRecentMonitors } from './hooks/use-dashboard';
+import { PATHS } from '@/src/utils/routes/paths';
 
 
 export default function DashboardPage() {
@@ -18,7 +19,7 @@ export default function DashboardPage() {
   const { data: recentIncidents, isLoading: isLoadingRecentIncidents, isSuccess: isSuccessLoadingRecentIncidents } = useRecentIncidents();
 
   const viewIncident = (id: string) => {
-    navigate(`/dashboard/incidents/${id}`);
+    navigate(PATHS.DASHBOARD.INCIDENTS.DETAILS(id));
   };
 
 
@@ -52,13 +53,13 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => navigate('/dashboard/incidents')}
+              onClick={() => navigate(PATHS.DASHBOARD.INCIDENTS.LIST)}
               className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors cursor-pointer"
             >
               Incidents
             </button>
             <button
-              onClick={() => navigate('/dashboard/monitors/create')}
+              onClick={() => navigate(PATHS.DASHBOARD.MONITORS.CREATE)}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4 shrink-0" />
@@ -125,7 +126,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white">Node Health Matrix</h2>
             <button
-              onClick={() => navigate('/monitors')}
+              onClick={() => navigate(PATHS.DASHBOARD.MONITORS.LIST)}
               className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
             >
               Manage all monitors ({overview?.totalMonitorsCount}) <ChevronRight className="w-3 h-3" />
@@ -157,7 +158,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <h2 className="text-sm font-semibold text-white">Recent Incidents</h2>
               <button
-                onClick={() => navigate('/incidents')}
+                onClick={() => navigate(PATHS.DASHBOARD.INCIDENTS.LIST)}
                 className="text-xs font-mono text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
               >
                 View all →

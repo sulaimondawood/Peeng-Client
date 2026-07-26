@@ -1,4 +1,5 @@
 import { MonitorResponse } from "@/src/types/dashboard";
+import { Meta } from "./meta";
 
 export type IncidentStatus = "OPEN" | "INVESTIGATING" | "RESOLVED" | "MONITORING";
 export type Severity = "CRITICAL" | "WARNING" | "INFO";
@@ -60,13 +61,6 @@ export interface IncidentFilterRequest {
     size?: number;
 }
 
-export interface Meta {
-    pageNumber: number;
-    pageSize: number;
-    totalElements: number;
-    totalPages: number;
-    last: boolean;
-}
 
 export interface PaginatedIncidents {
     data: IncidentDTO[];

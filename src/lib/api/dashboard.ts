@@ -1,8 +1,5 @@
 
-
-
-import { ApiResponse } from "@/src/types/auth";
-
+import { ApiResponse } from "@/src/types/api-response";
 import { api } from "./config";
 import { DashboardOverview, IncidentResponse, MonitorResponse } from "@/src/types/dashboard";
 

@@ -1,6 +1,5 @@
 
 import type {
-    ApiResponse,
     LoginRequest,
     LoginResponse,
     RegisterRequest,
@@ -10,6 +9,7 @@ import type {
     VerifyEmailResponse,
 } from "@/src/types/auth";
 import { api, request } from "./config";
+import { ApiResponse } from "@/src/types/api-response";
 
 export const authApi = {
     register: async (payload: RegisterRequest) => {

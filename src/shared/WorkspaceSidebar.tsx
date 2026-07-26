@@ -1,16 +1,21 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useAppState } from "../context/StateContext";
 import { getLastTenantId, setLastTenantId } from "../lib/api/auth-storage";
 import { useLogout } from "../pages/auth/hooks/use-auth";
 import { MembershipSession } from "../types/auth";
+import { PATHS } from "../utils/routes/paths";
 import { SidebarNav } from "./dashboard/SidebarNav";
 import { UserProfileFooter } from "./dashboard/UserProfileFooter";
 import { WorkspaceSwitcher } from "./dashboard/WorkspaceSwitcher";
 
 export default function WorkspaceSidebar() {
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
+
   const navigate = useNavigate();
   const {
     addToast,
@@ -21,6 +26,7 @@ export default function WorkspaceSidebar() {
   } = useAppState();
 
   const { user, memberships } = useAuth();
+  const queryClient = useQueryClient()
   const logout = useLogout();
 
   const currentMembership = useMemo(() => {
@@ -33,21 +39,27 @@ export default function WorkspaceSidebar() {
     }
 
     return memberships[0];
-  }, [memberships]);
+  }, [memberships, getLastTenantId()]);
 
   const handleSelectWorkspace = (membership: MembershipSession) => {
+    setIsSwitching(true);
+    setSwitcherOpen(false);
     setLastTenantId(membership.tenantId);
-    addToast(`Switched to workspace: ${membership.workspaceName}`, "success");
-    window.location.reload();
+
+    queryClient.invalidateQueries();
+
+    navigate("/dashboard");
+
+    setTimeout(() => {
+      setIsSwitching(false);
+      addToast(`Switched to workspace: ${membership.workspaceName}`, "success");
+    }, 800);
   };
 
-  const handleCreateWorkspace = (name: string) => {
-    // TODO: call your real create workspace mutation
-    addToast(`Creating workspace '${name}'...`, "info");
-  };
 
   const handleLogout = () => {
     logout();
+    navigate(PATHS.AUTH.LOGIN)
   };
 
   return (
@@ -85,7 +97,6 @@ export default function WorkspaceSidebar() {
           currentMembership={currentMembership}
           memberships={memberships}
           onSelectWorkspace={handleSelectWorkspace}
-          onCreateWorkspace={handleCreateWorkspace}
           onLogout={handleLogout}
         />
 
@@ -100,6 +111,20 @@ export default function WorkspaceSidebar() {
           onLogout={handleLogout}
         />
       </aside>
+
+      {/* Switcher & Creator Overlays (Rendered outside <aside> to prevent transform nesting from disrupting centering) */}
+      {isSwitching && (
+        <div className="fixed inset-0 bg-slate-950/90 z-[90] flex flex-col items-center justify-center font-sans">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <RefreshCw className="w-6 h-6 text-indigo-400 animate-spin" />
+            <div className="space-y-1">
+              <h3 className="font-semibold text-xs text-slate-100 tracking-tight font-display">Syncing Cluster Records</h3>
+              <p className="text-xxxxs text-slate-500 font-mono uppercase tracking-wider">Establishing tunnel to regional endpoints...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 }

@@ -3,6 +3,7 @@ import { MonitorResponse } from "@/src/types/dashboard";
 import { Loader2, Pause, Play } from "lucide-react";
 import { useToggleMonitor } from "../monitor/hooks/use-monitor";
 import { useNavigate } from "react-router-dom";
+import { PATHS } from "@/src/utils/routes/paths";
 
 export function MonitorRow({ m }: { m: MonitorResponse }) {
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ export function MonitorRow({ m }: { m: MonitorResponse }) {
     const isPaused = m.lifecycle === "PAUSED";
 
     const viewMonitor = (id: string) => {
-        navigate(`/dashboard/monitors/${id}`);
+        navigate(PATHS.DASHBOARD.MONITORS.DETAILS(id));
     };
 
     return (

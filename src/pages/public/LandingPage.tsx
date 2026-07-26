@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppState } from '../../context/StateContext';
+import { useAuth } from '@/src/context/AuthContext';
 import {
-  Github,
+  Check,
   Copy,
-  Check
+  Github
 } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppState } from '../../context/StateContext';
 
 export function LandingPage() {
   const { addToast } = useAppState();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const { user, isAuthenticated } = useAuth()
 
   const terminalCommand = `git clone https://github.com/peeng/peeng-monitoring.git
 cd peeng-monitoring
@@ -23,13 +25,13 @@ docker compose up -d`;
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // const handlePrimaryCta = () => {
-  //   if (user && user.loggedIn) {
-  //     navigate('/dashboard');
-  //   } else {
-  //     navigate('/auth/login');
-  //   }
-  // };
+  const handlePrimaryCta = () => {
+    if (user && isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth/login');
+    }
+  };
 
   return (
     <div className="bg-slate-950 text-slate-100 min-h-screen font-sans select-none relative pb-16">
@@ -49,21 +51,21 @@ docker compose up -d`;
 
             <div className="flex items-center gap-3 pt-2">
               <button
-                // onClick={handlePrimaryCta}
+                onClick={handlePrimaryCta}
                 className="px-5 py-2.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors cursor-pointer"
               >
                 Get Started
               </button>
 
-              <a
-                href="https://github.com"
+              <Link
+                to="https://github.com/sulaimondawood/Peeng"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded border border-slate-800 hover:border-slate-700 bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-white transition-colors text-xs font-semibold cursor-pointer"
               >
                 <Github className="w-4 h-4" />
                 <span>View on GitHub</span>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -82,7 +84,7 @@ docker compose up -d`;
             </div>
             <div className="p-3.5 bg-slate-900/60 border border-slate-800 rounded-lg">
               <div className="text-slate-200 font-bold">Open Source</div>
-              <div className="text-slate-400 text-xxs mt-0.5 font-sans">MIT licensed software</div>
+              {/* <div className="text-slate-400 text-xxs mt-0.5 font-sans">MIT licensed software</div> */}
             </div>
           </div>
 
@@ -105,7 +107,7 @@ docker compose up -d`;
               <span className="w-2.5 h-2.5 rounded-full bg-slate-700 inline-block" />
               <span className="w-2.5 h-2.5 rounded-full bg-slate-700 inline-block" />
               <span className="w-2.5 h-2.5 rounded-full bg-slate-700 inline-block" />
-              <span className="ml-2 font-mono text-xs text-slate-400 font-medium">peeng-console // workspace: acme-production</span>
+              <span className="ml-2 font-mono text-xs text-slate-400 font-medium">peeng-console // workspace: peeng-production</span>
             </div>
             <div className="flex items-center gap-2 text-xxs font-mono text-slate-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -141,7 +143,7 @@ docker compose up -d`;
                     <span>Auth Service Endpoint</span>
                     <span className="text-[10px] text-slate-500 font-mono">GET</span>
                   </div>
-                  <div className="text-xxs text-slate-400 truncate">https://auth.acme.com/healthz</div>
+                  <div className="text-xxs text-slate-400 truncate">https://auth.peeng.com/healthz</div>
                 </div>
               </div>
               <div className="flex items-center gap-6 text-xxs shrink-0">
@@ -169,7 +171,7 @@ docker compose up -d`;
                     <span>Primary Database Cluster</span>
                     <span className="text-[10px] text-slate-500 font-mono">POST</span>
                   </div>
-                  <div className="text-xxs text-slate-400 truncate">https://db-primary.acme.internal/ping</div>
+                  <div className="text-xxs text-slate-400 truncate">https://db-primary.peeng.internal/ping</div>
                 </div>
               </div>
               <div className="flex items-center gap-6 text-xxs shrink-0">
@@ -197,7 +199,7 @@ docker compose up -d`;
                     <span>Billing Gateway Proxy</span>
                     <span className="text-[10px] text-rose-400 font-mono font-semibold">INCIDENT OPEN</span>
                   </div>
-                  <div className="text-xxs text-slate-400 truncate">https://billing.acme.com/v1/status</div>
+                  <div className="text-xxs text-slate-400 truncate">https://billing.peeng.com/v1/status</div>
                 </div>
               </div>
               <div className="flex items-center gap-6 text-xxs shrink-0">
@@ -225,7 +227,7 @@ docker compose up -d`;
                     <span>Payment Webhook Processor</span>
                     <span className="text-[10px] text-slate-500 font-mono">GET</span>
                   </div>
-                  <div className="text-xxs text-slate-400 truncate">https://webhooks.acme.com/health</div>
+                  <div className="text-xxs text-slate-400 truncate">https://webhooks.peeng.com/health</div>
                 </div>
               </div>
               <div className="flex items-center gap-6 text-xxs shrink-0">
@@ -363,7 +365,7 @@ docker compose up -d`;
             </p>
           </div>
           <button
-            // onClick={handlePrimaryCta}
+            onClick={handlePrimaryCta}
             className="px-5 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors cursor-pointer shrink-0"
           >
             Launch Console

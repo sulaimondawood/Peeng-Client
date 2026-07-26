@@ -4,7 +4,7 @@ import { StateProvider } from './context/StateContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from './pages/dashboard/components/ToastContainer';
 import { AuthProvider } from './context/AuthContext';
-import { AppRoutes } from './routes';
+import { AppRoutes } from './utils/routes/routes';
 
 
 const queryClient = new QueryClient({

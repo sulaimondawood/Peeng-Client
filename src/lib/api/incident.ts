@@ -7,10 +7,12 @@ import {
     IncidentActivityDTO,
     MembershipResponse,
     IncidentFilterRequest,
-    Meta,
+
 } from "@/src/types/incident";
 import { api } from "./config";
-import { ApiResponse } from "@/src/types/auth";
+import { ApiResponse } from "@/src/types/api-response";
+import { Meta } from "@/src/types/meta";
+
 
 export const incidentApi = {
     getOpened: async () => {

@@ -1,4 +1,4 @@
-export type MonitorStatus = 'UP' | 'DOWN' | 'PENDING' | 'PAUSED';
+import { MonitorStatus } from "./types/monitor";
 
 export interface CheckHistoryItem {
   id: string;

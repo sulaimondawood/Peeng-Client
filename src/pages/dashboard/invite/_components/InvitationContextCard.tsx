@@ -1,192 +1,110 @@
 import React, { useState } from 'react';
-import { Lock, Mail, ShieldCheck, ArrowRight, Eye, EyeOff, KeyRound } from 'lucide-react';
+import { Building, Lock, User, ArrowRight, Loader2, Mail } from 'lucide-react';
 
 interface InvitationContextCardProps {
-  id?: string;
   workspaceName: string;
   inviteeEmail: string;
-  onAccept: (password: string) => Promise<boolean>;
+  isAlreadyRegistered?: boolean;
+  isSubmitting?: boolean;
+  onAccept: (formData: { name?: string; password?: string }) => Promise<void> | void;
 }
 
-export function InvitationContextCard({ 
-  id = 'invitation-card',
-  workspaceName, 
-  inviteeEmail, 
-  onAccept 
+export function InvitationContextCard({
+  workspaceName,
+  inviteeEmail,
+  isAlreadyRegistered = false,
+  isSubmitting = false,
+  onAccept,
 }: InvitationContextCardProps) {
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [localError, setLocalError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLocalError(null);
-
-    if (password.length < 8) {
-      setLocalError('Password must contain at least 8 characters for security compliance.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setLocalError('Passwords do not match. Please verify credentials matching.');
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const res = await onAccept(password);
-      if (res) {
-        setSuccess(true);
-      }
-    } catch (err: any) {
-      setLocalError(err?.message || 'Enrollment transaction aborted by SMTP routing check.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    onAccept({
+      name: name.trim() || undefined,
+      password: isAlreadyRegistered ? undefined : password,
+    });
   };
 
-  if (success) {
-    return (
-      <div 
-        className="bg-slate-900 border border-emerald-900/40 rounded-xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden transition-all duration-300"
-        id={`${id}-success`}
-      >
-        <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500" />
-        <div className="text-center space-y-5">
-          <div className="w-14 h-14 bg-emerald-950/40 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto text-emerald-400">
-            <ShieldCheck className="w-8 h-8" />
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-lg font-bold font-sans text-slate-100 tracking-tight">Access Granted</h2>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Your operator credentials for <span className="text-indigo-400 font-semibold">{workspaceName}</span> are validated and synced.
-            </p>
-          </div>
-          <div className="p-4 bg-slate-950 border border-slate-850 rounded-lg text-left space-y-2 font-mono text-[10px] text-slate-400">
-            <p className="text-emerald-400 font-bold">[Status]: ACTIVE OPERATOR</p>
-            <p>Identity: {inviteeEmail}</p>
-            <p>Node Keys: Dispatched & Verified</p>
-          </div>
-          <button
-            onClick={() => window.location.href = '/'}
-            className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-550 border border-indigo-500/30 text-white rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-            id={`${id}-success-btn`}
-          >
-            Enter Operator Console <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-    );
-  }
+
+  const isSubmitDisabled =
+    isSubmitting || (!isAlreadyRegistered && (!name.trim() || !password));
 
   return (
-    <div className="bg-slate-900 border border-slate-850 rounded-xl p-6.5 max-w-md w-full shadow-2xl relative overflow-hidden" id={id}>
-      <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500" />
-      
-      <div className="mb-6 space-y-2">
-        <div className="inline-block px-2.5 py-0.5 bg-indigo-950/50 border border-indigo-900/40 text-indigo-400 text-[9px] font-mono font-bold rounded-full uppercase tracking-widest">
-          Secured Invitation Verified
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6.5 w-full shadow-2xl relative overflow-hidden space-y-6 text-zinc-100 font-sans">
+      <div className="space-y-2 border-b border-zinc-800 pb-4">
+        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 uppercase tracking-wider">
+          <Building className="w-4 h-4 text-indigo-400" />
+          <span>Workspace Invitation</span>
         </div>
-        <h2 className="text-lg font-bold font-sans text-slate-100 leading-tight">
-          Join <span className="text-indigo-400 font-extrabold">{workspaceName}</span>
+        <h2 className="text-lg font-bold tracking-tight text-white">
+          Join <span className="text-indigo-400">{workspaceName}</span>
         </h2>
-        <p className="text-xs text-slate-400 leading-relaxed">
-          Configure secure operator credentials to activate access. Your role authority has been assigned by the workspace administrator.
+        <p className="text-xs text-zinc-400 flex items-center gap-1.5 font-mono">
+          <Mail className="w-3.5 h-3.5 text-zinc-500" />
+          <span>{inviteeEmail}</span>
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {localError && (
-          <div className="p-3 bg-rose-955/20 border border-rose-900/30 rounded-lg text-rose-400 text-[10px] font-mono leading-relaxed">
-            <span className="font-bold">[Error]:</span> {localError}
+        {/* Full Name Input (Optional for existing users, required for new) */}
+        <div className="space-y-1.5">
+          <label className="block text-[10px] font-mono uppercase text-zinc-400 font-semibold">
+            {isAlreadyRegistered ? 'Full Name (Optional Update)' : 'Full Name'}
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              required={!isAlreadyRegistered}
+              disabled={isSubmitting}
+              className="w-full pl-9 pr-3 py-2 text-xs bg-zinc-950 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-zinc-700 transition-colors"
+              placeholder={isAlreadyRegistered ? 'Keep existing name or update' : 'e.g. Dauda Sulaimon'}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <User className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
+          </div>
+        </div>
+
+        {/* Password Input (Only shown for unregistered users) */}
+        {!isAlreadyRegistered && (
+          <div className="space-y-1.5">
+            <label className="block text-[10px] font-mono uppercase text-zinc-400 font-semibold">
+              Create Password
+            </label>
+            <div className="relative">
+              <input
+                type="password"
+                required
+                disabled={isSubmitting}
+                className="w-full pl-9 pr-3 py-2 text-xs bg-zinc-950 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-zinc-700 transition-colors font-mono"
+                placeholder="••••••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Lock className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
+            </div>
           </div>
         )}
 
-        {/* Email - locked strictly read-only */}
-        <div>
-          <label className="block text-xxxxs font-mono uppercase tracking-wider text-slate-500 font-semibold mb-1.5 flex items-center justify-between">
-            <span>Operator Identity (Locked)</span>
-            <span className="text-[9px] text-emerald-400 font-bold flex items-center gap-1 font-mono">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              Secure Link
-            </span>
-          </label>
-          <div className="relative">
-            <input
-              type="email"
-              readOnly
-              value={inviteeEmail}
-              className="w-full pl-9.5 pr-3 py-2 text-xs bg-slate-950 border border-slate-850 rounded-lg text-slate-450 cursor-not-allowed font-mono outline-none"
-              title="This address is locked to prevent identity hijacking."
-              id={`${id}-email-readonly`}
-            />
-            <Mail className="absolute left-3.5 top-2.5 w-3.5 h-3.5 text-slate-650" />
-          </div>
-        </div>
-
-        {/* New Password */}
-        <div>
-          <label className="block text-xxxxs font-mono uppercase tracking-wider text-slate-500 font-semibold mb-1.5">
-            Configure Password
-          </label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              required
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-9.5 pr-10 py-2 text-xs bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg text-slate-100 outline-none font-mono"
-              id={`${id}-password-input`}
-            />
-            <KeyRound className="absolute left-3.5 top-2.5 w-3.5 h-3.5 text-slate-650" />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2.5 text-slate-500 hover:text-slate-400 focus:outline-none cursor-pointer"
-              id={`${id}-toggle-visible-btn`}
-            >
-              {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Confirm Password */}
-        <div>
-          <label className="block text-xxxxs font-mono uppercase tracking-wider text-slate-500 font-semibold mb-1.5">
-            Re-enter Password
-          </label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              required
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full pl-9.5 pr-10 py-2 text-xs bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg text-slate-100 outline-none font-mono"
-              id={`${id}-confirm-password-input`}
-            />
-            <Lock className="absolute left-3.5 top-2.5 w-3.5 h-3.5 text-slate-650" />
-          </div>
-        </div>
-
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-550 border border-indigo-500/20 text-white rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
-          id={`${id}-submit-btn`}
+          disabled={isSubmitDisabled}
+          className="w-full py-2.5 bg-white hover:bg-zinc-200 text-black font-semibold text-xs rounded-lg uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
         >
           {isSubmitting ? (
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-              Encrypting Credentials...
-            </span>
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <span>
+                {isAlreadyRegistered ? 'Accepting Invite...' : 'Completing Account Setup...'}
+              </span>
+            </>
           ) : (
             <>
-              Accept Invite & Create Account
+              <span>
+                {isAlreadyRegistered ? 'Accept Invite & Join' : 'Complete Setup & Join'}
+              </span>
               <ArrowRight className="w-3.5 h-3.5" />
             </>
           )}

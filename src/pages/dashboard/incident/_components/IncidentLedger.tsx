@@ -1,5 +1,5 @@
 
-import type { IncidentDTO, IncidentFilterRequest, Meta } from "@/src/types/incident";
+import type { IncidentDTO, IncidentFilterRequest } from "@/src/types/incident";
 import {
     ArrowRight,
     Calendar,
@@ -14,6 +14,7 @@ import {
 import { exportIncidentsCsv, formatDuration, getIncidentTitle } from "../utils";
 import { IncidentFilters } from "./IncidentFilters";
 import { IncidentLedgerSkeleton } from "./skeletons/IncidentLedgerSkeleton";
+import { Meta } from "@/src/types/meta";
 
 interface Props {
     incidents: IncidentDTO[];
