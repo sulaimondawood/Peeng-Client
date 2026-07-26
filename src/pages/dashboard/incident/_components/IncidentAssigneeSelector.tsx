@@ -30,10 +30,10 @@ export function IncidentAssigneeSelector({
                     <select
                         disabled={isAssigning}
                         className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-200 text-xs font-mono focus:outline-none cursor-pointer disabled:opacity-50"
-                        value={currentAssignedTo || "unassigned"}
+                        value={""}
                         onChange={(e) => onAssign(e.target.value)}
                     >
-                        <option value="unassigned" disabled>
+                        <option value="" disabled>
                             Select Member...
                         </option>
                         {members.map((m) => (

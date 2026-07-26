@@ -35,7 +35,7 @@ export function IncidentDiagnosticPanel({
                             </span>
                             <span className="text-zinc-500">{latestTrace.responseTimeMs}ms</span>
                         </div>
-                        <p className="text-zinc-300 text-[11px]">{latestTrace.message}</p>
+                        <p className="text-zinc-300 text-[11px] overflow-y-auto">{latestTrace.message}</p>
                     </div>
                 ) : (
                     <div className="text-center py-4 text-zinc-600 italic">No manual trace recorded yet.</div>

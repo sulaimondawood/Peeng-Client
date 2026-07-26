@@ -10,7 +10,7 @@ export function NotificationChannelsPanel({ userEmail = '' }: NotificationChanne
 
     return (
         <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 md:p-6 shadow-xl space-y-4 text-zinc-100">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+            <div className="flex flex-wrap gap-y-2  items-center justify-between border-b border-zinc-800 pb-3">
                 <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono flex items-center gap-2">
                     <BellRing className="w-4 h-4 text-indigo-400" /> Webhook & Escalation Channels
                 </h3>
@@ -35,8 +35,8 @@ export function NotificationChannelsPanel({ userEmail = '' }: NotificationChanne
             <div className="space-y-3 font-mono text-xs text-zinc-300">
                 {/* Email */}
                 <div className="flex items-center justify-between p-3.5 rounded-lg bg-zinc-900 border border-zinc-800">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-emerald-950/80 border border-emerald-800/50 text-emerald-400">
+                    <div className="flex  items-center gap-3">
+                        <div className="p-2 hidden sm:block rounded-lg bg-emerald-950/80 border border-emerald-800/50 text-emerald-400">
                             <Mail className="w-4 h-4" />
                         </div>
                         <div className="space-y-0.5">
@@ -63,7 +63,7 @@ export function NotificationChannelsPanel({ userEmail = '' }: NotificationChanne
                 {/* Slack (Preview) */}
                 <div className="flex items-center justify-between p-3.5 rounded-lg bg-zinc-900/50 border border-zinc-800 opacity-60">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400">
+                        <div className="hidden sm:block p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400">
                             <MessageSquare className="w-4 h-4" />
                         </div>
                         <div className="space-y-0.5">
@@ -85,7 +85,7 @@ export function NotificationChannelsPanel({ userEmail = '' }: NotificationChanne
                 {/* PagerDuty (Preview) */}
                 <div className="flex items-center justify-between p-3.5 rounded-lg bg-zinc-900/50 border border-zinc-800 opacity-60">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400">
+                        <div className="hidden sm:block p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400">
                             <PhoneCall className="w-4 h-4" />
                         </div>
                         <div className="space-y-0.5">

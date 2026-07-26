@@ -36,7 +36,6 @@ docker compose up -d`;
   return (
     <div className="bg-slate-950 text-slate-100 min-h-screen font-sans select-none relative pb-16">
 
-      {/* Hero Header - Structured 2-column left-aligned split */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 border-b border-slate-800">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
@@ -91,7 +90,6 @@ docker compose up -d`;
         </div>
       </section>
 
-      {/* Live Monitor Matrix Preview */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-slate-800 space-y-4">
         <div className="flex items-center justify-between">
           <div>
@@ -101,7 +99,7 @@ docker compose up -d`;
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl text-left">
-          {/* Window title bar */}
+
           <div className="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-slate-700 inline-block" />
@@ -115,7 +113,7 @@ docker compose up -d`;
             </div>
           </div>
 
-          {/* Monitor Matrix Table Header */}
+
           <div className="p-4 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div className="flex items-center gap-4">
               <span className="text-slate-200 font-bold">ACTIVE MONITORS (4)</span>
@@ -131,7 +129,7 @@ docker compose up -d`;
             </div>
           </div>
 
-          {/* Matrix Rows */}
+
           <div className="divide-y divide-slate-800/80 font-mono text-xs">
 
             {/* Row 1 */}
@@ -250,7 +248,7 @@ docker compose up -d`;
         </div>
       </section>
 
-      {/* Core Capabilities */}
+
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-slate-800 space-y-6">
         <div className="border-b border-slate-800 pb-3">
           <h2 className="text-xl font-bold tracking-tight text-white font-sans">
@@ -285,7 +283,7 @@ docker compose up -d`;
         </div>
       </section>
 
-      {/* How It Works */}
+
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-slate-800 space-y-6">
         <div className="border-b border-slate-800 pb-3">
           <h2 className="text-xl font-bold tracking-tight text-white font-sans">
@@ -323,7 +321,6 @@ docker compose up -d`;
         </div>
       </section>
 
-      {/* Developer & Deployment Section */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-slate-800">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-5 space-y-2">
@@ -355,7 +352,7 @@ docker compose up -d`;
         </div>
       </section>
 
-      {/* Bottom CTA */}
+
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>

@@ -34,10 +34,8 @@ export function InvitationContextCard({
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6.5 w-full shadow-2xl relative overflow-hidden space-y-6 text-zinc-100 font-sans">
       <div className="space-y-2 border-b border-zinc-800 pb-4">
-        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 uppercase tracking-wider">
-          <Building className="w-4 h-4 text-indigo-400" />
-          <span>Workspace Invitation</span>
-        </div>
+        <p>Workspace Invitation</p>
+
         <h2 className="text-lg font-bold tracking-tight text-white">
           Join <span className="text-indigo-400">{workspaceName}</span>
         </h2>

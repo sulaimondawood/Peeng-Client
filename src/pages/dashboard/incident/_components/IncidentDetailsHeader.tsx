@@ -19,7 +19,7 @@ export function IncidentDetailsHeader({ incidentId, monitor }: IncidentDetailsHe
 
     return (
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-5">
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="flex flex-wrap items-center gap-3 min-w-0">
                 <button
                     onClick={() => navigate(PATHS.DASHBOARD.INCIDENTS.LIST)}
                     className="p-2 rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white transition-colors cursor-pointer"

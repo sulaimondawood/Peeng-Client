@@ -62,7 +62,7 @@ export default function TeamDashboardPage() {
     }
   };
 
-  // Full-page fallback skeleton for initial loading state
+
   if (isMembersLoading && isOverviewLoading) {
     return <TeamDashboardSkeleton />;
   }
@@ -86,11 +86,10 @@ export default function TeamDashboardPage() {
         </div>
       )}
 
-      {/* Metric Cards Grid */}
       {isOverviewLoading && !overview ? (
         <TeamStatsSkeleton />
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex items-center gap-4">
             <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-lg flex items-center justify-center text-zinc-400">
               <Users className="w-5 h-5" />
@@ -149,7 +148,7 @@ export default function TeamDashboardPage() {
         </div>
       )}
 
-      {/* Layout Grid */}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2 space-y-4">
           {isMembersLoading ? (

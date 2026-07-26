@@ -75,7 +75,7 @@ export function OperatorRosterTable({
   };
 
   return (
-    <div className="bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden shadow-xl text-zinc-100" id={id}>
+    <div className="bg-zinc-950 border border-zinc-800 rounded-xl overflow-x-auto shadow-xl text-zinc-100" id={id}>
       {/* Table Header Section */}
       <div className="p-4 bg-zinc-900/50 border-b border-zinc-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="space-y-0.5">

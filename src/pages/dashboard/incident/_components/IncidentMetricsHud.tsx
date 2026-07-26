@@ -14,7 +14,7 @@ export function IncidentMetricsHud({ overview }: IncidentMetricsHudProps) {
     };
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 bg-zinc-950 border border-zinc-800 rounded-xl shadow-xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-5 bg-zinc-950 border border-zinc-800 rounded-xl shadow-xl">
             <div className="space-y-1">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-semibold block">
                     Outage Duration
@@ -27,7 +27,7 @@ export function IncidentMetricsHud({ overview }: IncidentMetricsHudProps) {
                 </div>
             </div>
 
-            <div className="space-y-1 border-l border-zinc-800 pl-4">
+            <div className="space-y-1 sm:border-l border-zinc-800 sm:pl-4">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-semibold block">
                     Target Endpoint
                 </span>
@@ -40,7 +40,7 @@ export function IncidentMetricsHud({ overview }: IncidentMetricsHudProps) {
                 </span>
             </div>
 
-            <div className="space-y-1 border-l border-zinc-800 pl-4">
+            <div className="space-y-1 sm:border-l border-zinc-800 sm:pl-4">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-semibold block">
                     Check Status
                 </span>
@@ -52,7 +52,7 @@ export function IncidentMetricsHud({ overview }: IncidentMetricsHudProps) {
                 </div>
             </div>
 
-            <div className="space-y-1 border-l border-zinc-800 pl-4">
+            <div className="space-y-1 sm:border-l border-zinc-800 sm:pl-4">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-semibold block">
                     Assigned Owner
                 </span>

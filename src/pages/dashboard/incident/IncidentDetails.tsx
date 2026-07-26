@@ -28,6 +28,7 @@ export default function IncidentDetails() {
   const { data: timeline = [], isLoading: isTimelineLoading } = useIncidentActivity(safeIncidentId);
   const { data: members = [] } = useTeamMembers();
 
+
   const traceMutation = useRunDiagnostic();
   const assignMutation = useAssignIncident();
 
@@ -147,9 +148,9 @@ export default function IncidentDetails() {
                 isAssigning={assignMutation.isPending}
               />
 
-              <IncidentNotificationChannels
+              {/* <IncidentNotificationChannels
                 notifications={overview.notificationTrace}
-              />
+              /> */}
             </>
           )}
         </div>

@@ -20,14 +20,14 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <StateProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <StateProvider>
           <Router>
             <AppRoutes />
             <ToastContainer />
           </Router>
-        </AuthProvider>
-      </StateProvider>
+        </StateProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

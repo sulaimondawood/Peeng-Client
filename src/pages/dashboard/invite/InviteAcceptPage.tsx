@@ -22,19 +22,18 @@ export default function InviteAcceptPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 relative selection:bg-indigo-500/30 selection:text-indigo-200">
-      {/* Ambient background lines */}
+
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900/40 via-slate-950 to-slate-950 pointer-events-none z-0" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#020617_1px,transparent_1px),linear-gradient(to_bottom,#020617_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none z-0" />
 
       <div className="w-full max-w-md relative z-10 flex flex-col items-center">
-        {/* Brand Header */}
         <div className="mb-6 flex items-center gap-2">
           <span className="text-sm font-bold tracking-widest text-slate-200 font-mono uppercase">
             Peeng Core
           </span>
         </div>
 
-        {/* Loading Decryption Loop */}
+
         {loading && (
           <div className="bg-slate-900 border border-slate-850 rounded-xl p-6.5 w-full space-y-4 shadow-2xl relative overflow-hidden font-mono text-[11px] text-indigo-400">
             <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500" />
@@ -69,7 +68,7 @@ export default function InviteAcceptPage() {
           </div>
         )}
 
-        {/* Invalid / Expired Link Error Screen */}
+
         {!loading && (error || !isValid) && (
           <div className="bg-slate-900 border border-rose-900/40 rounded-xl p-6.5 w-full shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-rose-500" />
@@ -112,7 +111,7 @@ export default function InviteAcceptPage() {
           </div>
         )}
 
-        {/* Valid Invitation Workflow Form */}
+
         {!loading && isValid && workspaceName && inviteeEmail && (
           <InvitationContextCard
             workspaceName={workspaceName}

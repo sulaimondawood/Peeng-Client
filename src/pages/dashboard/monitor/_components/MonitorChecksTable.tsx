@@ -18,7 +18,7 @@ export function MonitorChecksTable({
 }: MonitorChecksTableProps) {
     return (
         <div className="space-y-3">
-            <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950">
+            <div className="rounded-xl border border-zinc-800 bg-zinc-950 overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b border-zinc-800 bg-zinc-900 font-mono text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">
@@ -61,7 +61,7 @@ export function MonitorChecksTable({
             </div>
 
             {meta && meta.totalPages > 1 && (
-                <div className="flex items-center justify-between text-xs text-zinc-500 font-mono px-1">
+                <div className="flex flex-wrap gap-y-3 items-center justify-between text-xs text-zinc-500 font-mono px-1">
                     <span>
                         Page {meta.pageNumber + 1} of {meta.totalPages} ({meta.totalElements} checks)
                     </span>

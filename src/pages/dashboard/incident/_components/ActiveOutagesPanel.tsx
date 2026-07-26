@@ -32,14 +32,14 @@ export function ActiveOutagesPanel({ incidents, isLoading, onSelect }: Props) {
                         className="p-5 rounded-xl bg-slate-900 border border-rose-900/35 hover:border-rose-900/50 transition-all cursor-pointer group space-y-4 shadow-xl"
                     >
                         <div className="flex items-start justify-between gap-3">
-                            <div className="space-y-1.5 flex-1">
+                            <div className="space-y-1.5 flex-1 overflow-x-hidden">
                                 <div className="flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
                                     <span className="text-xs font-mono text-rose-400 uppercase font-bold tracking-wider">
                                         {inc?.severity ?? "UNKNOWN"} SEVERITY FAULT
                                     </span>
                                 </div>
-                                <h4 className="text-sm font-bold text-slate-100 group-hover:text-rose-400 transition-colors leading-snug">
+                                <h4 className="text-sm font-bold text-slate-100 group-hover:text-rose-400 transition-colors leading-snug text-ellipsis overflow-x-hidden">
                                     {getIncidentTitle(inc)}
                                 </h4>
                                 <p className="text-xs text-slate-500 font-mono">
@@ -49,12 +49,10 @@ export function ActiveOutagesPanel({ incidents, isLoading, onSelect }: Props) {
                                     </span>
                                 </p>
                             </div>
-                            <span className="text-xs font-mono text-slate-400 bg-slate-950 border border-slate-800 px-2.5 py-1 rounded">
-                                Elapsed: {formatDuration(inc.durationSeconds)}
-                            </span>
+
                         </div>
 
-                        <div className="border-t border-slate-800 pt-3.5 flex items-center justify-between">
+                        <div className="border-t border-slate-800 pt-3.5 flex flex-wrap gap-y-2 items-center justify-between">
                             <div className="flex gap-1">
                                 <span className="px-1.5 py-0.5 rounded font-mono text-[9px] text-slate-400 border border-slate-800 bg-slate-950">
                                     Notifications Sent

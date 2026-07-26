@@ -43,7 +43,7 @@ export default function SettingsPages() {
     return memberships[0];
   }, [memberships, activeTenantId, getLastTenantId()]);
 
-  // Loading state targets
+
   const isProfileLoading = false;
 
 
@@ -80,7 +80,7 @@ export default function SettingsPages() {
 
         {/* Panel 3: API Authentication Tokens (Coming Soon) */}
         <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 md:p-6 shadow-xl space-y-4">
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div className="flex flex-wrap gap-y-2 items-center justify-between border-b border-zinc-800 pb-3">
             <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono flex items-center gap-2">
               <KeyRound className="w-4 h-4 text-indigo-400" /> API Authentication Tokens
             </h3>
@@ -94,7 +94,7 @@ export default function SettingsPages() {
               Integrate telemetry into your CI/CD pipelines, Ansible setups, or Terraform providers using automated API tokens. Token management is restricted in v1 preview mode.
             </p>
 
-            <div className="flex gap-2.5 max-w-md">
+            <div className="flex flex-wrap gap-2.5 max-w-md">
               <input
                 type="text"
                 disabled
@@ -118,7 +118,7 @@ export default function SettingsPages() {
         <NotificationChannelsPanel userEmail={user?.email} />
 
         <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 md:p-6 shadow-xl space-y-4">
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div className="flex flex-wrap gap-y-2  items-center justify-between border-b border-zinc-800 pb-3">
             <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono flex items-center gap-2">
               <Building className="w-4 h-4 text-indigo-400" /> Workspace Memberships & Controls
             </h3>
@@ -151,7 +151,7 @@ export default function SettingsPages() {
 
 
         <div className="border border-zinc-800 rounded-xl p-5 md:p-6 bg-zinc-950 space-y-4 shadow-xl">
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div className="flex flex-wrap gap-y-2  items-center justify-between border-b border-zinc-800 pb-3">
             <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-red-400" /> Dangerous Area Functions
             </h3>

@@ -15,8 +15,6 @@ export function FeaturesPage() {
   };
   return (
     <div className="bg-slate-950 text-slate-100 min-h-screen font-sans select-none relative pb-16">
-
-      {/* Page Header - Left-aligned, tight vertical padding */}
       <div className="border-b border-slate-800 bg-slate-950 py-8 md:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
           <h1 className="text-3xl font-bold tracking-tight text-white font-sans">
@@ -30,7 +28,6 @@ export function FeaturesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
-        {/* Section 1: Endpoint & Synthetic Monitoring */}
         <section className="space-y-6">
           <div className="border-b border-slate-800 pb-3">
             <h2 className="text-lg font-bold text-white font-sans">Endpoint & Synthetic Monitoring</h2>
@@ -68,7 +65,7 @@ export function FeaturesPage() {
           </div>
         </section>
 
-        {/* Section 2: Incident Management & Threshold Rules */}
+
         <section className="space-y-6">
           <div className="border-b border-slate-800 pb-3">
             <h2 className="text-lg font-bold text-white font-sans">Incident Management & Threshold Rules</h2>
@@ -106,7 +103,6 @@ export function FeaturesPage() {
           </div>
         </section>
 
-        {/* Section 3: Audit Logging & Activity Feed */}
         <section className="space-y-6">
           <div className="border-b border-slate-800 pb-3">
             <h2 className="text-lg font-bold text-white font-sans">Audit Logging & Activity Feed</h2>
@@ -130,7 +126,6 @@ export function FeaturesPage() {
           </div>
         </section>
 
-        {/* Section 4: Multi-Tenant Workspace Management */}
         <section className="space-y-6">
           <div className="border-b border-slate-800 pb-3">
             <h2 className="text-lg font-bold text-white font-sans">Multi-Tenant Workspace Management</h2>
@@ -163,7 +158,7 @@ export function FeaturesPage() {
 
       </div>
 
-      {/* Bottom CTA */}
+
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-t border-slate-800">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -173,7 +168,7 @@ export function FeaturesPage() {
             </p>
           </div>
           <button
-            // onClick={handlePrimaryCta}
+            onClick={handlePrimaryCta}
             className="px-5 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors cursor-pointer shrink-0"
           >
             Launch Console

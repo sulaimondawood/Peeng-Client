@@ -1,6 +1,6 @@
 import { Building, Loader2, LogOut, Plus, ShieldAlert } from 'lucide-react';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/src/context/AuthContext';
 import { useAppState } from '@/src/context/StateContext';
@@ -54,9 +54,9 @@ export function NoWorkspacePage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans select-none">
       {/* Top Header Bar */}
       <div className="max-w-5xl mx-auto w-full flex items-center justify-between py-2 border-b border-zinc-900 relative z-10">
-        <div className="flex items-center gap-2.5">
+        <Link to={"/"} className="flex items-center gap-2.5">
           <span className="font-bold text-sm tracking-tight font-display text-white">PEENG</span>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono">
@@ -77,25 +77,16 @@ export function NoWorkspacePage() {
       <div className="max-w-3xl mx-auto w-full my-auto py-8 relative z-10 space-y-6">
         {/* Warning Banner: No Workspace Membership */}
         <div className="p-4 sm:p-5 rounded-2xl bg-amber-950/30 border border-amber-800/40 shadow-xl space-y-3">
-          <div className="flex items-start gap-3.5">
-            <div className="p-2.5 rounded-xl bg-amber-900/40 border border-amber-700/50 text-amber-400 shrink-0 mt-0.5">
-              <ShieldAlert className="w-5 h-5" />
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-amber-200 font-sans">No Active Workspace Membership</h2>
-                <span className="px-2 py-0.5 rounded bg-amber-950 border border-amber-800 text-amber-400 text-[9px] font-mono font-bold uppercase tracking-wider">
-                  Action Required
-                </span>
-              </div>
-              <p className="text-xs text-zinc-300 font-mono leading-relaxed">
-                Your account (<span className="text-white font-semibold">{user?.email}</span>) is signed in, but you currently do not belong to any active workspace.
-              </p>
-              <p className="text-xs text-amber-300/80 font-mono pt-1">
-                To continue, create a workspace below or accept an invitation from an administrator.
-              </p>
-            </div>
+          <div className="space-y-1">
+            <h2 className="text-sm font-bold text-amber-200 font-sans">No Active Workspace Membership</h2>
+            <p className="text-xs text-zinc-300 font-mono leading-relaxed">
+              Your account (<span className="text-white font-semibold">{user?.email}</span>) is signed in.
+            </p>
+            <p className="text-xs text-amber-300/80 font-mono pt-1">
+              To continue, create a workspace below.
+            </p>
           </div>
+
         </div>
 
         {/* Workspace Creation Form Card */}
@@ -103,7 +94,7 @@ export function NoWorkspacePage() {
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div>
               <h1 className="text-lg font-bold text-white font-display flex items-center gap-2">
-                <Building className="w-5 h-5 text-indigo-400" /> Create Workspace
+                Create Workspace
               </h1>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">
                 Set up a workspace to manage monitors, incidents, and status pages.

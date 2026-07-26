@@ -282,7 +282,7 @@ export default function CreateMonitor() {
             </div>
 
             {/* Action Bar */}
-            <div className="border-t border-zinc-800 pt-5 flex items-center justify-end gap-3">
+            <div className="border-t border-zinc-800 pt-5 flex flex-wrap items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => navigate(PATHS.DASHBOARD.MONITORS.LIST)}

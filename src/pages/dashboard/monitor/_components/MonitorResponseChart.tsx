@@ -27,10 +27,10 @@ export function MonitorResponseChart({
     isUptimeBlocksLoading,
     range,
     onRangeChange,
-    maxBlocks = 45, // Standard fixed number of visual blocks
+    maxBlocks = 45,
 }: MonitorResponseChartProps) {
 
-    // Normalizes data array to always render EXACTLY maxBlocks items
+
     const normalizedBlocks = useMemo(() => {
         const rawBlocks = uptimeBlocks.length > 0
             ? uptimeBlocks.map((b) => ({
@@ -55,10 +55,10 @@ export function MonitorResponseChart({
             }));
         }
 
-        // Take the most recent items up to maxBlocks
+
         const recent = rawBlocks.slice(-maxBlocks);
 
-        // If fewer than maxBlocks exist, pad on the left with empty placeholders
+
         if (recent.length < maxBlocks) {
             const paddingCount = maxBlocks - recent.length;
             const padding = Array.from({ length: paddingCount }, () => ({
@@ -152,7 +152,7 @@ export function MonitorResponseChart({
                 {isUptimeBlocksLoading ? (
                     <div className="h-6 bg-zinc-900 animate-pulse rounded" />
                 ) : (
-                    <div className="flex gap-1 items-center w-full py-1">
+                    <div className="flex gap-1 items-center w-full py-1 overflow-x-auto">
                         {normalizedBlocks.map((block, idx) => {
                             if (block.isEmpty) {
                                 return (
