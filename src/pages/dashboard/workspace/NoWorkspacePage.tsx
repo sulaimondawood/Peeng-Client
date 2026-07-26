@@ -1,17 +1,22 @@
+import { Building, Loader2, LogOut, Plus, ShieldAlert } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building, Loader2, LogOut, Plus, ShieldAlert } from 'lucide-react';
-
 
 import { useAuth } from '@/src/context/AuthContext';
+import { useAppState } from '@/src/context/StateContext';
 import { useCreateWorkspace } from '@/src/hooks/use-tenant';
 import InitialsAvatar from '@/src/shared/InitialsAvatar';
+import { MembershipSession } from '@/src/types/auth';
 import { PATHS } from '@/src/utils/routes/paths';
-import { clearAuth } from '@/src/lib/api/auth-storage';
+import { AxiosError } from 'axios';
+import { useLogout } from '../../auth/hooks/use-auth';
 
 export function NoWorkspacePage() {
-  const { user } = useAuth();
+  const { user, memberships, updateMemberships } = useAuth();
   const navigate = useNavigate();
+  const { addToast } = useAppState()
+  const logout = useLogout();
+
 
   const [workspaceName, setWorkspaceName] = useState('');
   const createWorkspaceMutation = useCreateWorkspace();
@@ -23,16 +28,26 @@ export function NoWorkspacePage() {
     createWorkspaceMutation.mutate(
       { workspaceName: workspaceName.trim() },
       {
-        onSuccess: () => {
-          navigate(PATHS.DASHBOARD.ROOT);
+        onSuccess: (res: any) => {
+          const createdWorkspace: MembershipSession = res;
+
+          const updatedMemberships = [...memberships, createdWorkspace];
+
+          updateMemberships(updatedMemberships, createdWorkspace.tenantId);
+
+          navigate(PATHS.DASHBOARD.ROOT, { replace: true });
+        },
+        onError: (error: AxiosError<any>) => {
+          const message =
+            error.response?.data?.message || "Workspace creation failed. Please try again.";
+          addToast(message, "error");
         },
       }
     );
   };
 
   const handleLogout = () => {
-    clearAuth();
-    navigate(PATHS.AUTH.LOGIN);
+    logout();
   };
 
   return (

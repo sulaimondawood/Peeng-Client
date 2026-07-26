@@ -1,11 +1,14 @@
+import { useAuth } from '@/src/context/AuthContext';
+import { CheckCircle2, Send } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAppState } from '../../context/StateContext';
-import { CheckCircle2, ArrowRight, Send } from 'lucide-react';
 
 export default function StatusPagesFeature() {
   const { addToast } = useAppState();
   const [subscribed, setSubscribed] = useState(false);
-  const [emailInput, setEmailInput] = useState('sulaimond70@gmail.com');
+  const [emailInput, setEmailInput] = useState('');
+
+  const { user } = useAuth()
 
   const handleNotify = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -38,9 +41,8 @@ export default function StatusPagesFeature() {
               <input
                 type="email"
                 required
-                disabled={subscribed}
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
+                disabled={true}
+                value={user?.email}
                 placeholder="user@company.com"
                 className="w-full px-3.5 py-2.5 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 font-mono focus:outline-hidden focus:border-indigo-500 disabled:opacity-60"
               />

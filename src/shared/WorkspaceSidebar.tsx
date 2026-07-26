@@ -1,10 +1,11 @@
-import { useQueryClient } from "@tanstack/react-query";
+
 import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
 import { useAppState } from "../context/StateContext";
-import { getLastTenantId, setLastTenantId } from "../lib/api/auth-storage";
+import { getLastTenantId } from "../lib/api/auth-storage";
 import { useLogout } from "../pages/auth/hooks/use-auth";
 import { MembershipSession } from "../types/auth";
 import { PATHS } from "../utils/routes/paths";
@@ -17,49 +18,40 @@ export default function WorkspaceSidebar() {
   const [isSwitching, setIsSwitching] = useState(false);
 
   const navigate = useNavigate();
-  const {
-    addToast,
-    sidebarCollapsed,
-    setSidebarCollapsed,
-    sidebarMobileOpen,
-    setSidebarMobileOpen,
-  } = useAppState();
+  const { addToast, sidebarCollapsed, setSidebarCollapsed, sidebarMobileOpen, setSidebarMobileOpen } = useAppState();
 
-  const { user, memberships } = useAuth();
-  const queryClient = useQueryClient()
+  const { user, memberships, activeTenantId, switchWorkspace } = useAuth();
   const logout = useLogout();
+
 
   const currentMembership = useMemo(() => {
     if (memberships.length === 0) return null;
 
-    const lastTenantId = getLastTenantId();
-    if (lastTenantId) {
-      const found = memberships.find((m) => m.tenantId === lastTenantId);
+    if (activeTenantId) {
+      const found = memberships.find((m) => m.tenantId === activeTenantId);
       if (found) return found;
     }
 
     return memberships[0];
-  }, [memberships, getLastTenantId()]);
+  }, [memberships, activeTenantId, getLastTenantId()]);
 
   const handleSelectWorkspace = (membership: MembershipSession) => {
     setIsSwitching(true);
     setSwitcherOpen(false);
-    setLastTenantId(membership.tenantId);
 
-    queryClient.invalidateQueries();
+    // Perform workspace switch via Context
+    switchWorkspace(membership);
 
     navigate("/dashboard");
 
     setTimeout(() => {
       setIsSwitching(false);
       addToast(`Switched to workspace: ${membership.workspaceName}`, "success");
-    }, 800);
+    }, 400);
   };
-
 
   const handleLogout = () => {
     logout();
-    navigate(PATHS.AUTH.LOGIN)
   };
 
   return (
@@ -74,14 +66,10 @@ export default function WorkspaceSidebar() {
       <div className="hidden md:block relative">
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="absolute -right-3 top-5 w-6 h-6 bg-zinc-900 border border-zinc-800 rounded-full flex items-center justify-center text-zinc-400 hover:text-white transition-transform hover:scale-110 z-50 cursor-pointer"
+          className="absolute -right-5 top-5 size-8 bg-zinc-900 border border-zinc-800 rounded-full flex items-center justify-center text-zinc-400 hover:text-white transition-transform hover:scale-110 z-50 cursor-pointer"
           title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          {sidebarCollapsed ? (
-            <ChevronRight className="w-3.5 h-3.5" />
-          ) : (
-            <ChevronLeft className="w-3.5 h-3.5" />
-          )}
+          {sidebarCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
         </button>
       </div>
 
@@ -100,19 +88,11 @@ export default function WorkspaceSidebar() {
           onLogout={handleLogout}
         />
 
-        <SidebarNav
-          collapsed={sidebarCollapsed}
-          onNavigateMobile={() => setSidebarMobileOpen(false)}
-        />
+        <SidebarNav collapsed={sidebarCollapsed} onNavigateMobile={() => setSidebarMobileOpen(false)} />
 
-        <UserProfileFooter
-          collapsed={sidebarCollapsed}
-          user={user}
-          onLogout={handleLogout}
-        />
+        <UserProfileFooter collapsed={sidebarCollapsed} user={user} onLogout={handleLogout} />
       </aside>
 
-      {/* Switcher & Creator Overlays (Rendered outside <aside> to prevent transform nesting from disrupting centering) */}
       {isSwitching && (
         <div className="fixed inset-0 bg-slate-950/90 z-[90] flex flex-col items-center justify-center font-sans">
           <div className="flex flex-col items-center gap-4 text-center">
@@ -124,7 +104,6 @@ export default function WorkspaceSidebar() {
           </div>
         </div>
       )}
-
     </>
   );
 }

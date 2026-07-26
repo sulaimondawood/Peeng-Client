@@ -56,7 +56,6 @@ export function IncidentFilters({
                     >
                         <option value="">All Statuses</option>
                         <option value="OPEN">OPEN</option>
-                        <option value="INVESTIGATING">INVESTIGATING</option>
                         <option value="RESOLVED">RESOLVED</option>
                     </select>
                 </div>

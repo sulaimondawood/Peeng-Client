@@ -4,6 +4,7 @@ import { useIncidentFilters } from "./hooks/use-incident-filters";
 import { useIncidents, useOpenedIncidents } from "./hooks/use-incident";
 import { ActiveOutagesPanel } from "./_components/ActiveOutagesPanel";
 import { IncidentLedger } from "./_components/IncidentLedger";
+import { useMonitors } from "../monitor/hooks/use-monitor";
 
 export default function IncidentPages() {
   const navigate = useNavigate();
@@ -20,15 +21,12 @@ export default function IncidentPages() {
   const meta = listQuery.data?.meta;
   const openedIncidents = openedQuery.data ?? [];
 
+  const { data: monitorsResponse } = useMonitors();
+
   const monitorOptions = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const inc of incidents) {
-      if (inc.monitor?.id) {
-        map.set(inc.monitor.id, inc.monitor.name);
-      }
-    }
-    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
-  }, [incidents]);
+    const monitors = monitorsResponse?.items || [];
+    return monitors.map((m) => ({ id: m.id, name: m.name }));
+  }, [monitorsResponse]);
 
   const hasActiveFilters = Boolean(
     filters.status ||

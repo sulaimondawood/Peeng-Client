@@ -35,4 +35,5 @@ export interface IncidentResponse {
     resolvedStatusCode: number | null;
     durationSeconds: number | null;
     monitor: MonitorResponse;
+    startedAt: string
 }

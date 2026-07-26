@@ -3,6 +3,7 @@ import { useAppState } from "@/src/context/StateContext";
 import { authApi } from "@/src/lib/api/auth";
 import { clearAuth, setAuth } from "@/src/lib/api/auth-storage";
 import { LoginRequest } from "@/src/types/auth";
+import { PATHS } from "@/src/utils/routes/paths";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
@@ -102,12 +103,12 @@ export function useUpdatePassword() {
 }
 
 export function useLogout() {
-    const navigate = useNavigate();
+
     const queryClient = useQueryClient();
 
     return () => {
         clearAuth();
         queryClient.clear();
-        navigate("/login");
+        window.location.replace(PATHS.AUTH.LOGIN);
     };
 }

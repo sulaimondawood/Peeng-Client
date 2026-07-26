@@ -94,7 +94,7 @@ export default function MonitorList() {
     toggleMutation.mutate(id);
   };
 
-  const statusOptions = ["ALL", "UP", "DOWN", "PAUSED"];
+  const statusOptions = ["ALL", "UP", "DOWN"];
   const monitors = data?.items || [];
   const meta = data?.meta;
 

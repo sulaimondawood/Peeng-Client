@@ -54,6 +54,7 @@ export function NotificationChannelsPanel({ userEmail = '' }: NotificationChanne
                     <input
                         type="checkbox"
                         checked={emailEnabled}
+                        disabled
                         onChange={(e) => setEmailEnabled(e.target.checked)}
                         className="w-4 h-4 accent-indigo-500 rounded bg-zinc-950 cursor-pointer"
                     />
@@ -106,8 +107,9 @@ export function NotificationChannelsPanel({ userEmail = '' }: NotificationChanne
 
             <div className="pt-2 border-t border-zinc-800 flex justify-end">
                 <button
+                    disabled
                     type="button"
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white font-mono text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer"
+                    className="disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 font-mono text-xs uppercase tracking-wider font-semibold transition-all"
                 >
                     <Send className="w-3.5 h-3.5 text-indigo-400" />
                     <span>Send Test Notification</span>

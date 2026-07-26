@@ -1,18 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
+  Building,
   KeyRound,
   Lock,
   Plus,
   ShieldAlert,
-  Building,
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { SettingsPanelSkeleton } from './_components/skeleton/SettingsPanelSkeleton';
-import { SettingsProfileSkeleton } from './_components/skeleton/SettingsProfileSkeleton';
 import { NotificationChannelsPanel } from './_components/NotificationChannelsPanel';
+import { SettingsProfileSkeleton } from './_components/skeleton/SettingsProfileSkeleton';
 import { UpdateNameForm } from './_components/UpdateNameForm';
 import { UpdatePasswordForm } from './_components/UpdatePasswordForm';
+import { useAuth } from '@/src/context/AuthContext';
+import { getLastTenantId } from '@/src/lib/api/auth-storage';
+import { PATHS } from '@/src/utils/routes/paths';
 
 export interface Workspace {
   id: string;
@@ -28,30 +30,29 @@ export interface UserProfile {
 
 export default function SettingsPages() {
   const navigate = useNavigate();
+  const { user, memberships, activeTenantId } = useAuth()
+
+  const currentMembership = useMemo(() => {
+    if (memberships.length === 0) return null;
+
+    if (activeTenantId) {
+      const found = memberships.find((m) => m.tenantId === activeTenantId);
+      if (found) return found;
+    }
+
+    return memberships[0];
+  }, [memberships, activeTenantId, getLastTenantId()]);
 
   // Loading state targets
   const isProfileLoading = false;
-  const isWorkspaceLoading = false;
 
-  const [user] = useState<UserProfile | null>({
-    name: 'Sulaimon D.',
-    email: 'sulaimond70@gmail.com',
-  });
 
-  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>({
-    id: 'ws-1',
-    name: 'peeng Corp',
-    slug: 'peeng-corp',
-    plan: 'pro',
-  });
 
   const [workspaces, setWorkspaces] = useState<Workspace[]>([
     { id: 'ws-1', name: 'peeng Corp', slug: 'peeng-corp', plan: 'pro' },
   ]);
 
-  const handleUpdateWorkspace = (name: string, slug: string) => {
-    setCurrentWorkspace((prev) => ({ ...prev, name, slug }));
-  };
+
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto p-4 lg:p-6 font-sans select-none text-zinc-100">
@@ -113,10 +114,9 @@ export default function SettingsPages() {
           </div>
         </div>
 
-        {/* Panel 4: Webhook & Escalation channels */}
+
         <NotificationChannelsPanel userEmail={user?.email} />
 
-        {/* Panel 5: Workspace Memberships & Switcher */}
         <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 md:p-6 shadow-xl space-y-4">
           <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
             <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono flex items-center gap-2">
@@ -130,27 +130,26 @@ export default function SettingsPages() {
           <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <h4 className="text-xs font-bold text-zinc-200">
-                Current Workspace: {currentWorkspace.name}
+                Current Workspace: {currentMembership?.workspaceName ?? "-"}
               </h4>
               <p className="text-xs text-zinc-400 font-mono">
-                Slug: <span className="text-indigo-300">{currentWorkspace.slug}</span> • Plan:{' '}
-                <span className="uppercase text-white font-semibold">{currentWorkspace.plan}</span>
+                Slug: <span className="text-indigo-300">{currentMembership?.slug ?? "-"}</span>
               </p>
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
                 type="button"
-                onClick={() => navigate('/no-workspace')}
-                className="px-3 py-1.8 rounded-lg bg-white hover:bg-zinc-200 text-black font-mono text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer shrink-0"
+                onClick={() => navigate(PATHS.ONBOARDING.NO_WORKSPACE)}
+                className="px-3 py-2 rounded-lg bg-white hover:bg-zinc-200 text-black font-mono text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer shrink-0"
               >
-                + Create Workspace
+                Create Workspace
               </button>
             </div>
           </div>
         </div>
 
-        {/* Panel 6: Danger Zone */}
+
         <div className="border border-zinc-800 rounded-xl p-5 md:p-6 bg-zinc-950 space-y-4 shadow-xl">
           <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
             <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono flex items-center gap-2">
@@ -185,7 +184,7 @@ export default function SettingsPages() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

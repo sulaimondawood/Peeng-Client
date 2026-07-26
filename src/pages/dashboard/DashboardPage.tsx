@@ -197,7 +197,7 @@ export default function DashboardPage() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <h3 className="text-xs font-semibold text-slate-100 line-clamp-1">{"Name"}</h3>
+                          <h3 className="text-xs font-semibold text-slate-100 line-clamp-1">{inc?.latestErrorMessage}</h3>
                           {inc?.monitor?.name && (
                             <p className="text-xs text-slate-400 font-mono line-clamp-1">{inc?.monitor?.name}</p>
                           )}
@@ -205,7 +205,8 @@ export default function DashboardPage() {
 
                         <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-0.5">
                           <span>
-                            Opened
+                            Opened {new Date(inc?.startedAt
+                            ).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                           <span className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300">
                             Investigate <ArrowRight className="w-2.5 h-2.5" />

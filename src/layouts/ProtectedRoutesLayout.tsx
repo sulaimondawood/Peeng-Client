@@ -7,8 +7,8 @@ import Topbar from "../shared/Topbar";
 
 export function ProtectedRoutesLayout() {
 
-
     const { isAuthenticated, isLoading, user } = useAuth();
+
 
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>;

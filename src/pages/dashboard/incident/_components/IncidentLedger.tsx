@@ -154,7 +154,7 @@ export function IncidentLedger({
                                     {formatDuration(inc.durationSeconds)}
                                 </span>
                             </div>
-                            <h4 className="text-xs font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors">
+                            <h4 className="text-xs font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors text-ellipsis overflow-x-hidden">
                                 {getIncidentTitle(inc)}
                             </h4>
                             <div className="text-[10px] font-mono text-slate-400 border-t border-slate-800 pt-2 flex justify-between">

@@ -1,26 +1,25 @@
+import StatusPagesFeature from "@/src/pages/status/StatusPagesFeature";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { MarketingLayout } from "../../layouts/MarketingLayout";
-import LandingPage from "../../pages/public/LandingPage";
-import FeaturesPage from "../../pages/public/FeaturesPage";
 import { AuthLayout } from "../../layouts/AuthLayout";
+import { MarketingLayout } from "../../layouts/MarketingLayout";
+import { ProtectedRoutesLayout } from "../../layouts/ProtectedRoutesLayout";
+import EmailVerification from "../../pages/auth/EmailVerification";
+import ForgotPasswordPage from "../../pages/auth/ForgotPasswordPage";
 import LoginPage from "../../pages/auth/LoginPage";
 import RegisterPage from "../../pages/auth/RegisterPage";
-import ForgotPasswordPage from "../../pages/auth/ForgotPasswordPage";
-import ResetPasswordPage from "../../pages/auth/ResetPasswordPage";
-import EmailVerification from "../../pages/auth/EmailVerification";
-import InviteAcceptPage from "../../pages/dashboard/invite/InviteAcceptPage";
-import NoWorkspacePage from "../../pages/dashboard/workspace/NoWorkspacePage";
-import { ProtectedRoutesLayout } from "../../layouts/ProtectedRoutesLayout";
 import DashboardPage from "../../pages/dashboard/DashboardPage";
-import MonitorList from "../../pages/dashboard/monitor/MonitorList";
+import IncidentDetails from "../../pages/dashboard/incident/IncidentDetails";
+import IncidentPage from "../../pages/dashboard/incident/IncidentPage";
+import InviteAcceptPage from "../../pages/dashboard/invite/InviteAcceptPage";
 import CreateMonitor from "../../pages/dashboard/monitor/CreateMonitor";
 import MonitorDetails from "../../pages/dashboard/monitor/MonitorDetails";
-import IncidentPage from "../../pages/dashboard/incident/IncidentPage";
-import IncidentDetails from "../../pages/dashboard/incident/IncidentDetails";
+import MonitorList from "../../pages/dashboard/monitor/MonitorList";
 import SettingsPages from "../../pages/dashboard/settings/SettingsPages";
 import TeamDashboardPage from "../../pages/dashboard/team/TeamDashboardPage";
+import NoWorkspacePage from "../../pages/dashboard/workspace/NoWorkspacePage";
+import FeaturesPage from "../../pages/public/FeaturesPage";
+import LandingPage from "../../pages/public/LandingPage";
 import { PATHS } from "./paths";
-import StatusPagesFeature from "@/src/pages/status/StatusPagesFeature";
 
 
 
@@ -38,7 +37,6 @@ export function AppRoutes() {
                 <Route path="login" element={<LoginPage />} />
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="forgot" element={<ForgotPasswordPage />} />
-                <Route path="reset" element={<ResetPasswordPage />} />
                 <Route path="verify" element={<EmailVerification />} />
             </Route>
 
