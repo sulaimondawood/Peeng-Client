@@ -3,7 +3,7 @@ import { Users, MailCheck, AlertOctagon, UserCheck } from 'lucide-react';
 import { useTeamManagement } from './hooks/useTeamManagement';
 import { OperatorRosterTable } from './components/OperatorRosterTable';
 import { InviteOperatorForm } from './components/InviteOperatorForm';
-import { ConfirmationModal } from '@/src/components/ConfirmationModal';
+import { ConfirmationModal } from '@/src/pages/dashboard/components/ConfirmationModal';
 import { Role } from '@/src/types';
 
 

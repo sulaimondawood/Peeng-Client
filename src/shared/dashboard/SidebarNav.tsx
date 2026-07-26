@@ -15,11 +15,11 @@ interface SidebarNavProps {
 
 const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Activity },
-    { path: '/monitors', label: 'Monitors', icon: MonitorIcon },
-    { path: '/incidents', label: 'Incidents', icon: AlertTriangle },
-    { path: '/status-pages', label: 'Status Pages', icon: FileText },
-    { path: '/members', label: 'Team Members', icon: Users },
-    { path: '/settings', label: 'Settings', icon: Settings },
+    { path: '/dashboard/monitors', label: 'Monitors', icon: MonitorIcon },
+    { path: '/dashboard/incidents', label: 'Incidents', icon: AlertTriangle },
+    { path: '/dashboard/status-pages', label: 'Status Pages', icon: FileText },
+    { path: '/dashboard/members', label: 'Team Members', icon: Users },
+    { path: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 
 export function SidebarNav({ collapsed, onNavigateMobile }: SidebarNavProps) {

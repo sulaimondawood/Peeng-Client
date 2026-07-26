@@ -15,7 +15,7 @@ import DashboardPage from "./pages/dashboard/DashboardPage";
 import MonitorList from "./pages/dashboard/monitor/MonitorList";
 import CreateMonitor from "./pages/dashboard/monitor/CreateMonitor";
 import MonitorDetails from "./pages/dashboard/monitor/MonitorDetails";
-import IncidentPages from "./pages/dashboard/incident/IncidentPages";
+import IncidentPage from "./pages/dashboard/incident/IncidentPage";
 import IncidentDetails from "./pages/dashboard/incident/IncidentDetails";
 import SettingsPages from "./pages/dashboard/settings/SettingsPages";
 import TeamDashboardPage from "./pages/dashboard/team/TeamDashboardPage";
@@ -43,16 +43,16 @@ export function AppRoutes() {
             <Route path="/no-workspace" element={<NoWorkspacePage />} />
 
 
-            <Route element={<ProtectedRoutesLayout />}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/monitors" element={<MonitorList />} />
-                <Route path="/monitors/create" element={<CreateMonitor />} />
-                <Route path="/monitors/:monitorId" element={<MonitorDetails />} />
-                <Route path="/incidents" element={<IncidentPages />} />
-                <Route path="/incidents/:incidentId" element={<IncidentDetails />} />
-                <Route path="/settings" element={<SettingsPages />} />
-                <Route path="/members" element={<TeamDashboardPage />} />
-                <Route path="/dashboard/team" element={<TeamDashboardPage />} />
+            <Route path="/dashboard/" element={<ProtectedRoutesLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="monitors" element={<MonitorList />} />
+                <Route path="monitors/create" element={<CreateMonitor />} />
+                <Route path="monitors/:monitorId" element={<MonitorDetails />} />
+                <Route path="incidents" element={<IncidentPage />} />
+                <Route path="incidents/:incidentId" element={<IncidentDetails />} />
+                <Route path="settings" element={<SettingsPages />} />
+                <Route path="members" element={<TeamDashboardPage />} />
+                <Route path="team" element={<TeamDashboardPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

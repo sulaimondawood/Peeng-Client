@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppState } from '../context/StateContext';
+import { useAppState } from '../../../context/StateContext';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
 export function ToastContainer() {

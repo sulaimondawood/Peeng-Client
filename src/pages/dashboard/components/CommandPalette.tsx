@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAppState, AppRoute } from '../context/StateContext';
+import { useAppState, AppRoute } from '../../../context/StateContext';
 import { Search, Monitor as MonitorIcon, AlertTriangle, Users, CreditCard, Settings, FileText, BarChart3, Command, X } from 'lucide-react';
 
 export default function CommandPalette() {
