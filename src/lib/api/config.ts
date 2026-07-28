@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { clearAuth, getAccessToken, getLastTenantId } from "./auth-storage";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+
 export const api = axios.create({
     baseURL,
     headers: {
@@ -34,7 +35,6 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
     (response) => response,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (error: AxiosError<any>) => {
         if (!error.response) {
             console.error("Network Error:", error);
