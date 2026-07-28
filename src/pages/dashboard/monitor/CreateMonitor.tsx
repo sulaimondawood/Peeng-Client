@@ -14,7 +14,7 @@ export default function CreateMonitor() {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [intervalValue, setIntervalValue] = useState<number>(60);
-  const [intervalUnit, setIntervalUnit] = useState<TimeUnit>('SECONDS');
+  const [intervalUnit, setIntervalUnit] = useState<TimeUnit>('MINUTES');
   const [timeoutSeconds, setTimeoutSeconds] = useState<number>(5);
   const [expectedStatusCode, setExpectedStatusCode] = useState<number>(200);
   const [expectedKeyword, setExpectedKeyword] = useState('');
@@ -66,8 +66,6 @@ export default function CreateMonitor() {
         return 5;
       case 'HOURS':
         return 1;
-      case 'SECONDS':
-        return 300;
       default:
         return 5;
     }
