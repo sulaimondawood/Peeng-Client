@@ -8,13 +8,13 @@
   --bg-slate-850: #f1f5f9;
   --bg-slate-800: #e2e8f0;
   --bg-slate-700: #cbd5e1;
-  
+
   /* Light Theme Border Scale */
   --border-slate-950: #e2e8f0;
   --border-slate-900: #e2e8f0;
   --border-slate-850: #e2e8f0;
   --border-slate-800: #cbd5e1;
-  
+
   /* Light Theme Text Scale (Dark text hierarchy on light background) */
   --text-slate-50: #0f172a;
   --text-slate-100: #0f172a;
@@ -23,7 +23,7 @@
   --text-slate-400: #475569;
   --text-slate-500: #64748b;
   --text-slate-600: #94a3b8;
-  
+
   /* Indigo Scale (Light) */
   --indigo-50: #f5f3ff;
   --indigo-100: #e0e7ff;
@@ -69,13 +69,13 @@
   --bg-slate-850: #1a1a1e;
   --bg-slate-800: #242429;
   --bg-slate-700: #3f3f46;
-  
+
   /* Dark Theme Border Scale */
   --border-slate-950: #0f0f11;
   --border-slate-900: #18181c;
   --border-slate-850: #222226;
   --border-slate-800: #2e2e33;
-  
+
   /* Dark Theme Text Scale (Light text hierarchy on dark background) */
   --text-slate-50: #ffffff;
   --text-slate-100: #f4f4f5;
@@ -84,7 +84,7 @@
   --text-slate-400: #a1a1aa;
   --text-slate-500: #71717a;
   --text-slate-600: #52525b;
-  
+
   /* Indigo Scale (Dark) */
   --indigo-50: #1e1b4b;
   --indigo-100: #312e81;
@@ -203,21 +203,53 @@
   --color-amber-950: var(--amber-950);
 }
 
+*,
+::before,
+::after {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* 2. Configure high-visibility selection highlights for both themes */
+::selection {
+  background-color: var(--indigo-500);
+  color: #ffffff;
+}
+
+.dark ::selection {
+  background-color: var(--indigo-600);
+  color: #ffffff;
+}
+
+
 /* Custom subtle scrollbars for that premium Vercel/Linear look */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--bg-slate-800);
   border-radius: 9999px;
 }
+
 .dark ::-webkit-scrollbar-thumb {
   background: var(--bg-slate-800);
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--bg-slate-700);
+}
+
+html,
+body,
+#root {
+  -webkit-user-select: text !important;
+  user-select: text !important;
 }
