@@ -6,7 +6,7 @@ import { LoginRequest } from "@/src/types/auth";
 import { PATHS } from "@/src/utils/routes/paths";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 
 export function useLogin() {
@@ -53,12 +53,13 @@ export function useLogin() {
 
 export function useRegister() {
     const { addToast } = useAppState();
-
+    const navigate = useNavigate();
 
     return useMutation({
         mutationFn: authApi.register,
         onSuccess: (data) => {
             addToast(data?.message)
+            navigate(PATHS.AUTH.LOGIN, { replace: true })
         },
         onError: (error: AxiosError<any>) => {
             const message =
