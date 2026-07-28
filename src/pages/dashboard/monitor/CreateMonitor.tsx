@@ -62,14 +62,16 @@ export default function CreateMonitor() {
 
   const minAllowedValue = (unit: TimeUnit = intervalUnit) => {
     switch (unit) {
-      case 'SECONDS':
-        return 60;
       case 'MINUTES':
+        return 5;
       case 'HOURS':
-      default:
         return 1;
+      case 'SECONDS':
+        return 300;
+      default:
+        return 5;
     }
-  }
+  };
 
   const handleUnitChange = (newUnit: TimeUnit) => {
     setIntervalUnit(newUnit);
@@ -211,7 +213,7 @@ export default function CreateMonitor() {
                   value={intervalUnit}
                   onChange={(e) => handleUnitChange(e.target.value as TimeUnit)}
                 >
-                  <option value="SECONDS">Seconds</option>
+                  {/* <option value="SECONDS">Seconds</option> */}
                   <option value="MINUTES">Minutes</option>
                   <option value="HOURS">Hours</option>
                 </select>
