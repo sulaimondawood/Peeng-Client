@@ -68,7 +68,7 @@ export function IncidentLedger({
 
     return (
         <div className="space-y-4">
-            <div className="px-1 flex items-center justify-between border-b border-slate-900 pb-2">
+            <div className="px-1 flex flex-wrap gap-y-3 items-center justify-between border-b border-slate-900 pb-2">
                 <div className="space-y-0.5">
                     <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono">
                         System Audit Ledger

@@ -10,8 +10,6 @@ export type MonitorStatus = 'UP' | 'DOWN' | 'PENDING' | 'PAUSED';
 export interface CreateMonitorRequest {
     name: string;
     url: string;
-    method: MonitorHttpType;
-    monitorType: MonitorType;
     intervalValue: number;
     intervalUnit: TimeUnit;
     timeoutSeconds: number;

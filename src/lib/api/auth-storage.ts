@@ -15,6 +15,9 @@ export const setAuth = (
     localStorage.setItem(USER_KEY, JSON.stringify(user));
     localStorage.setItem(MEMBERSHIPS_KEY, JSON.stringify(memberships));
 
+    console.log(lastTenantId);
+    console.log(user.lastTenantId);
+
     if (lastTenantId) {
         localStorage.setItem(LAST_TENANT_KEY, lastTenantId);
     } else {

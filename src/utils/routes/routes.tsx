@@ -20,6 +20,7 @@ import NoWorkspacePage from "../../pages/dashboard/workspace/NoWorkspacePage";
 import FeaturesPage from "../../pages/public/FeaturesPage";
 import LandingPage from "../../pages/public/LandingPage";
 import { PATHS } from "./paths";
+import ResetPasswordPage from "@/src/pages/auth/ResetPasswordPage";
 
 
 
@@ -37,6 +38,7 @@ export function AppRoutes() {
                 <Route path="login" element={<LoginPage />} />
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="forgot" element={<ForgotPasswordPage />} />
+                <Route path="reset" element={<ResetPasswordPage />} />
                 <Route path="verify" element={<EmailVerification />} />
             </Route>
 

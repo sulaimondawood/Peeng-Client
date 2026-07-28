@@ -298,7 +298,6 @@ function StatusBadge({ status, lifecycle }: { status: string; lifecycle: string 
   if (lifecycle === "PAUSED") {
     return (
       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-amber-950/40 text-amber-400 border border-amber-900/50">
-        <span className="w-1 h-1 rounded-full bg-amber-400" />
         PAUSED
       </span>
     );
@@ -317,7 +316,6 @@ function StatusBadge({ status, lifecycle }: { status: string; lifecycle: string 
 
   return (
     <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase border ${colorStyle}`}>
-      <span className={`w-1 h-1 rounded-full ${dotStyle}`} />
       <span>{status}</span>
     </span>
   );

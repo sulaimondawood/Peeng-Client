@@ -57,4 +57,23 @@ export const authApi = {
         );
         return data.data;
     },
+    forgotPassword: async (payload: { email: string }) => {
+        const { data } = await api.post<ApiResponse<null>>(
+            "/auth/forgot-password",
+            payload
+        );
+        return data;
+    },
+
+    resetPassword: async (payload: {
+        token: string;
+        newPassword: string;
+        confirmPassword: string;
+    }) => {
+        const { data } = await api.post<ApiResponse<null>>(
+            "/auth/reset-password",
+            payload
+        );
+        return data;
+    },
 };

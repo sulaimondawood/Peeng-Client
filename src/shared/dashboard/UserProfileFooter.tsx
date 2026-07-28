@@ -3,6 +3,7 @@ import { LogOut, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import InitialsAvatar from '../InitialsAvatar';
 import { UserSession } from '@/src/types/auth';
+import { PATHS } from '@/src/utils/routes/paths';
 
 
 interface UserProfileFooterProps {
@@ -55,7 +56,7 @@ export function UserProfileFooter({
                     <button
                         onClick={() => {
                             setProfileOpen(false);
-                            navigate('/settings');
+                            navigate(PATHS.DASHBOARD.SETTINGS);
                         }}
                         className="flex items-center gap-2 w-full px-2 py-1.5 text-zinc-300 hover:bg-zinc-800 rounded text-left"
                     >

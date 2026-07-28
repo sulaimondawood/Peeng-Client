@@ -90,12 +90,6 @@ export function LoginPage() {
               </div>
             </div>
 
-            {login.isError && (
-              <p className="text-xs text-red-400 text-center">
-                {(login.error as any)?.response?.data?.message || "Invalid email or password"}
-              </p>
-            )}
-
             <button
               type="submit"
               disabled={login.isPending}

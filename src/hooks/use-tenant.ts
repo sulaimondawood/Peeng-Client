@@ -13,7 +13,7 @@ export function useCreateWorkspace() {
         mutationFn: (payload: CreateTenantRequest) => tenantApi.createWorkspace(payload),
         onSuccess: (data) => {
             addToast(`Workspace "${data.workspaceName}" created successfully!`, "success");
-            queryClient.invalidateQueries({ queryKey: ["user", "workspaces"] });
+            queryClient.invalidateQueries({ queryKey: ["auth", "memberships"] });
         },
         onError: (error: AxiosError<any>) => {
             addToast(

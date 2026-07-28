@@ -48,10 +48,6 @@ api.interceptors.response.use(
             window.location.href = "/auth/login";
         }
 
-        if (status === 403) {
-            window.history.back();
-        }
-
         if (status >= 500) {
             console.error("Server Error:", data?.message || error.message);
         }

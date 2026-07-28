@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Mail, Shield, UserPlus, AlertCircle, HelpCircle, Loader2 } from 'lucide-react';
-import { RoleType } from '@/src/types/auth';
 import { useAppState } from '@/src/context/StateContext';
-import { error } from 'console';
+import { RoleType } from '@/src/types/auth';
+import { HelpCircle, Loader2, Mail, Shield, UserPlus } from 'lucide-react';
+import React, { useState } from 'react';
 
 
 interface InviteOperatorFormProps {

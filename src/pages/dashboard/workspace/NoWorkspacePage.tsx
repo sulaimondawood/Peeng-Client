@@ -1,20 +1,16 @@
-import { Building, Loader2, LogOut, Plus, ShieldAlert } from 'lucide-react';
+import { Loader2, LogOut, Plus } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/src/context/AuthContext';
-import { useAppState } from '@/src/context/StateContext';
 import { useCreateWorkspace } from '@/src/hooks/use-tenant';
 import InitialsAvatar from '@/src/shared/InitialsAvatar';
-import { MembershipSession } from '@/src/types/auth';
 import { PATHS } from '@/src/utils/routes/paths';
-import { AxiosError } from 'axios';
 import { useLogout } from '../../auth/hooks/use-auth';
 
 export function NoWorkspacePage() {
   const { user, memberships, updateMemberships } = useAuth();
   const navigate = useNavigate();
-  const { addToast } = useAppState()
   const logout = useLogout();
 
 
@@ -29,19 +25,9 @@ export function NoWorkspacePage() {
       { workspaceName: workspaceName.trim() },
       {
         onSuccess: (res: any) => {
-          const createdWorkspace: MembershipSession = res;
-
-          const updatedMemberships = [...memberships, createdWorkspace];
-
-          updateMemberships(updatedMemberships, createdWorkspace.tenantId);
-
+          updateMemberships([...memberships, res], res.tenantId);
           navigate(PATHS.DASHBOARD.ROOT, { replace: true });
-        },
-        onError: (error: AxiosError<any>) => {
-          const message =
-            error.response?.data?.message || "Workspace creation failed. Please try again.";
-          addToast(message, "error");
-        },
+        }
       }
     );
   };

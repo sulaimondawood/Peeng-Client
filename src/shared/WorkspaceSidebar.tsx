@@ -14,7 +14,6 @@ import { UserProfileFooter } from "./dashboard/UserProfileFooter";
 import { WorkspaceSwitcher } from "./dashboard/WorkspaceSwitcher";
 
 export default function WorkspaceSidebar() {
-  const [switcherOpen, setSwitcherOpen] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
 
   const navigate = useNavigate();
@@ -25,29 +24,37 @@ export default function WorkspaceSidebar() {
 
 
   const currentMembership = useMemo(() => {
-    if (memberships.length === 0) return null;
+    if (!memberships || memberships.length === 0) return null;
+
 
     if (activeTenantId) {
       const found = memberships.find((m) => m.tenantId === activeTenantId);
       if (found) return found;
     }
 
+    //Fallback to storage key before state hydration completes
+    const storedTenantId = getLastTenantId();
+    if (storedTenantId) {
+      const foundStored = memberships.find((m) => m.tenantId === storedTenantId);
+      if (foundStored) return foundStored;
+    }
+
     return memberships[0];
-  }, [memberships, activeTenantId, getLastTenantId()]);
+  }, [memberships, activeTenantId]);
 
-  const handleSelectWorkspace = (membership: MembershipSession) => {
+
+  const handleSelectWorkspace = async (membership: MembershipSession) => {
     setIsSwitching(true);
-    setSwitcherOpen(false);
 
-    // Perform workspace switch via Context
-    switchWorkspace(membership);
-
-    navigate("/dashboard");
-
-    setTimeout(() => {
-      setIsSwitching(false);
+    try {
+      await switchWorkspace(membership.tenantId);
+      navigate(PATHS.DASHBOARD.ROOT);
       addToast(`Switched to workspace: ${membership.workspaceName}`, "success");
-    }, 400);
+    } catch (err: any) {
+      addToast(err?.response?.data?.message || "Failed to switch workspace", "error");
+    } finally {
+      setIsSwitching(false);
+    }
   };
 
   const handleLogout = () => {

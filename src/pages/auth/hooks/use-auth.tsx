@@ -24,6 +24,8 @@ export function useLogin() {
                 data.memberships[0]?.tenantId ||
                 null;
 
+            console.log(data.lastTenantId);
+
             setAuth(data.accessToken, data.user, data.memberships, lastTenantId);
 
             queryClient.setQueryData(["auth", "user"], data.user);
@@ -39,7 +41,7 @@ export function useLogin() {
                 return;
             }
 
-            navigate("/dashboard");
+            window.location.replace(PATHS.DASHBOARD.ROOT)
         },
         onError: (error: AxiosError<any>) => {
             const message =
@@ -111,4 +113,47 @@ export function useLogout() {
         queryClient.clear();
         window.location.replace(PATHS.AUTH.LOGIN);
     };
+}
+
+export function useForgotPassword() {
+    const { addToast } = useAppState();
+
+    return useMutation({
+        mutationFn: authApi.forgotPassword,
+        onSuccess: (data) => {
+            addToast(
+                data.message ||
+                "If an account exists for this email, a reset link has been sent.",
+                "success"
+            );
+        },
+        onError: (error: AxiosError<any>) => {
+            addToast(
+                error.response?.data?.message || "Something went wrong. Please try again.",
+                "error"
+            );
+        },
+    });
+}
+
+export function useResetPassword() {
+    const navigate = useNavigate();
+    const { addToast } = useAppState();
+
+    return useMutation({
+        mutationFn: authApi.resetPassword,
+        onSuccess: (data) => {
+            addToast(
+                data.message || "Password reset successfully. You can now sign in.",
+                "success"
+            );
+            navigate("/auth/login");
+        },
+        onError: (error: AxiosError<any>) => {
+            addToast(
+                error.response?.data?.message || "Invalid or expired reset link.",
+                "error"
+            );
+        },
+    });
 }

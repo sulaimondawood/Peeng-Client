@@ -1,22 +1,18 @@
+import { useAppState } from '@/src/context/StateContext';
+import { CreateMonitorRequest, MonitorHttpType, MonitorType, TimeUnit } from '@/src/types/monitor';
+import { PATHS } from '@/src/utils/routes/paths';
+import { AlertCircle, ArrowLeft, Globe, Loader2, Save, Sliders, Terminal } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Globe, Loader2, Save, Sliders, Terminal, AlertCircle } from 'lucide-react';
 import { useCreateMonitor } from './hooks/use-monitor';
-import { AxiosError, isAxiosError } from 'axios';
-import { CreateMonitorRequest, MonitorHttpType, MonitorType, TimeUnit } from '@/src/types/monitor';
-import { useAppState } from '@/src/context/StateContext';
-import { PATHS } from '@/src/utils/routes/paths';
 
 
 export default function CreateMonitor() {
   const navigate = useNavigate();
   const createMonitorMutation = useCreateMonitor();
 
-  // Form Field States matching backend CreateMonitorRequest DTO
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
-  const [method, setMethod] = useState<MonitorHttpType>('GET');
-  const [monitorType, setMonitorType] = useState<MonitorType>('HTTP');
   const [intervalValue, setIntervalValue] = useState<number>(60);
   const [intervalUnit, setIntervalUnit] = useState<TimeUnit>('SECONDS');
   const [timeoutSeconds, setTimeoutSeconds] = useState<number>(5);
@@ -48,8 +44,6 @@ export default function CreateMonitor() {
     const payload: CreateMonitorRequest = {
       name: name.trim(),
       url: url.trim(),
-      method,
-      monitorType,
       intervalValue,
       intervalUnit,
       timeoutSeconds,
@@ -64,6 +58,32 @@ export default function CreateMonitor() {
         navigate(PATHS.DASHBOARD.MONITORS.LIST);
       }
     });
+  };
+
+  const minAllowedValue = (unit: TimeUnit = intervalUnit) => {
+    switch (unit) {
+      case 'SECONDS':
+        return 60;
+      case 'MINUTES':
+      case 'HOURS':
+      default:
+        return 1;
+    }
+  }
+
+  const handleUnitChange = (newUnit: TimeUnit) => {
+    setIntervalUnit(newUnit);
+    const min = minAllowedValue(newUnit);
+    if (intervalValue < min) {
+      setIntervalValue(min);
+    }
+  };
+
+  const handleBlur = () => {
+    const min = minAllowedValue();
+    if (intervalValue < min) {
+      setIntervalValue(min);
+    }
   };
 
   return (
@@ -126,6 +146,11 @@ export default function CreateMonitor() {
                     placeholder="https://api.example.com/health"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
+                    onBlur={() => {
+                      if (url.trim() && !/^https?:\/\//i.test(url.trim())) {
+                        setUrl(`https://${url.trim()}`);
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -135,16 +160,15 @@ export default function CreateMonitor() {
                   HTTP Method
                 </label>
                 <select
-                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none cursor-pointer font-mono"
-                  value={method}
-                  onChange={(e) => setMethod(e.target.value as MonitorHttpType)}
+                  disabled
+                  value="GET"
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white opacity-60 cursor-not-allowed font-mono"
                 >
-                  {['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'].map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
+                  <option value="GET">GET</option>
                 </select>
+                <p className="mt-1 text-[10px] text-zinc-500 font-mono">
+                  Only GET checks are supported for now.
+                </p>
               </div>
 
               <div>
@@ -152,14 +176,15 @@ export default function CreateMonitor() {
                   Monitor Type
                 </label>
                 <select
-                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none cursor-pointer font-mono"
-                  value={monitorType}
-                  onChange={(e) => setMonitorType(e.target.value as MonitorType)}
+                  disabled
+                  value="HTTP"
+                  className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white opacity-60 cursor-not-allowed font-mono"
                 >
                   <option value="HTTP">HTTP / HTTPS</option>
-                  <option value="PING">ICMP Ping</option>
-                  <option value="PORT">TCP Port</option>
                 </select>
+                <p className="mt-1 text-[10px] text-zinc-500 font-mono">
+                  Only HTTP/HTTPS monitors are available for now.
+                </p>
               </div>
 
               <div>
@@ -168,11 +193,12 @@ export default function CreateMonitor() {
                 </label>
                 <input
                   type="number"
-                  min={10}
+                  min={minAllowedValue()}
                   required
                   className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none font-mono"
                   value={intervalValue}
                   onChange={(e) => setIntervalValue(Number(e.target.value))}
+                  onBlur={handleBlur}
                 />
               </div>
 
@@ -183,7 +209,7 @@ export default function CreateMonitor() {
                 <select
                   className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none cursor-pointer font-mono"
                   value={intervalUnit}
-                  onChange={(e) => setIntervalUnit(e.target.value as TimeUnit)}
+                  onChange={(e) => handleUnitChange(e.target.value as TimeUnit)}
                 >
                   <option value="SECONDS">Seconds</option>
                   <option value="MINUTES">Minutes</option>
@@ -197,7 +223,7 @@ export default function CreateMonitor() {
                 </label>
                 <input
                   type="number"
-                  min={1}
+                  min={2}
                   max={15}
                   required
                   className="w-full px-3 py-2 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none font-mono"
@@ -207,7 +233,7 @@ export default function CreateMonitor() {
               </div>
             </div>
 
-            {/* Assertion & Threshold Rules */}
+
             <div className="border-t border-zinc-800 pt-5 space-y-4">
               <h3 className="text-xs font-mono uppercase font-bold tracking-wider text-zinc-300 flex items-center gap-1.5">
                 <Sliders className="w-3.5 h-3.5 text-zinc-400" /> Assertion Rules & Incident Thresholds
@@ -281,7 +307,7 @@ export default function CreateMonitor() {
               </div>
             </div>
 
-            {/* Action Bar */}
+
             <div className="border-t border-zinc-800 pt-5 flex flex-wrap items-center justify-end gap-3">
               <button
                 type="button"
@@ -332,7 +358,7 @@ export default function CreateMonitor() {
             <div className="grid grid-cols-2 gap-3 border-t border-zinc-800 pt-4 text-[11px] font-mono">
               <div>
                 <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Method</span>
-                <span className="text-zinc-300 block mt-0.5">{method}</span>
+                <span className="text-zinc-300 block mt-0.5">GET</span>
               </div>
               <div>
                 <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Frequency</span>

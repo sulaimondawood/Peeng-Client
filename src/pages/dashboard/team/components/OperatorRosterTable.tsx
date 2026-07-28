@@ -30,7 +30,6 @@ export function OperatorRosterTable({
       case 'ACTIVE':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-900/50 text-emerald-400 text-[10px] font-mono font-medium uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             Active
           </span>
         );
@@ -38,21 +37,18 @@ export function OperatorRosterTable({
       case 'PENDING':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-950/40 border border-amber-900/50 text-amber-400 text-[10px] font-mono font-medium uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
             Invited
           </span>
         );
       case 'SUSPENDED':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-950/40 border border-red-900/50 text-red-400 text-[10px] font-mono font-medium uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
             Suspended
           </span>
         );
       case 'REMOVED':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-500 text-[10px] font-mono font-medium uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
             Removed
           </span>
         );
