@@ -14,8 +14,8 @@ export function LandingPage() {
   const [copied, setCopied] = useState(false);
   const { user, isAuthenticated } = useAuth()
 
-  const terminalCommand = `git clone https://github.com/peeng/peeng-monitoring.git
-cd peeng-monitoring
+  const terminalCommand = `git clone https://github.com/sulaimondawood/Peeng.git
+cd Peeng
 docker compose up -d`;
 
   const handleCopyCommand = () => {
