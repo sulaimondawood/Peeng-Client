@@ -1,6 +1,6 @@
 
 import { PATHS } from '@/src/utils/routes/paths';
-import { ArrowLeft, Download, Pause, Play, Trash2 } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, Pause, Play, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { StatusBadge } from './StatusBadge';
 import { MonitorResponse } from '@/src/types/dashboard';
@@ -65,13 +65,20 @@ export function MonitorDetailsHeader({
           disabled={isTogglePending}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white rounded-lg text-xs transition-colors cursor-pointer"
         >
-          {monitor.lifecycle === 'PAUSED' ? (
+          {isTogglePending ? (
             <>
-              <Play className="w-3.5 h-3.5 text-emerald-400" /> <span>Resume Monitor</span>
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
+              <span>{monitor.lifecycle === "PAUSED" ? "Resuming..." : "Pausing..."}</span>
+            </>
+          ) : monitor.lifecycle === "PAUSED" ? (
+            <>
+              <Play className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Resume Monitor</span>
             </>
           ) : (
             <>
-              <Pause className="w-3.5 h-3.5 text-amber-500" /> <span>Pause Monitor</span>
+              <Pause className="w-3.5 h-3.5 text-amber-500" />
+              <span>Pause Monitor</span>
             </>
           )}
         </button>

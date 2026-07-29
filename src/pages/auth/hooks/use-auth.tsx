@@ -1,4 +1,4 @@
-// src/hooks/use-auth.ts
+
 import { useAppState } from "@/src/context/StateContext";
 import { authApi } from "@/src/lib/api/auth";
 import { clearAuth, setAuth } from "@/src/lib/api/auth-storage";
@@ -6,7 +6,7 @@ import { LoginRequest } from "@/src/types/auth";
 import { PATHS } from "@/src/utils/routes/paths";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export function useLogin() {

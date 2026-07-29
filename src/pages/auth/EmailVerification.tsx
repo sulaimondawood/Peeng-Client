@@ -1,7 +1,7 @@
+import { AlertCircle, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { AlertCircle, CheckCircle2, Loader2, ArrowRight } from "lucide-react";
-import { useVerifyEmail, useResendVerification } from "./hooks/use-auth";
+import { useVerifyEmail } from "./hooks/use-auth";
 
 export default function EmailVerificationPage() {
   const [searchParams] = useSearchParams();

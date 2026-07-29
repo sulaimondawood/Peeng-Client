@@ -1,5 +1,4 @@
 import { Navigate, Outlet } from "react-router-dom";
-import CommandPalette from "../pages/dashboard/components/CommandPalette";
 
 import { useAuth } from "../context/AuthContext";
 import WorkspaceSidebar from "../shared/WorkspaceSidebar";
@@ -31,7 +30,6 @@ export function ProtectedRoutesLayout() {
                     <Outlet />
                 </main>
             </div>
-            <CommandPalette />
         </div>
     );
 }

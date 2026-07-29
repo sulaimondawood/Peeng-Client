@@ -1,6 +1,5 @@
-import React from 'react';
+import { AlertCircle, CheckCircle2, Info, X } from 'lucide-react';
 import { useAppState } from '../../../context/StateContext';
-import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
 export function ToastContainer() {
   const { toasts, addToast } = useAppState();

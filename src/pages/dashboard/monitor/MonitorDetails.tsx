@@ -24,15 +24,17 @@ import { MonitorIncidentsSidebar } from './_components/MonitorIncidentsSidebar';
 import { MonitorMetricCards } from './_components/MonitorMetricCards';
 import { MonitorResponseChart } from './_components/MonitorResponseChart';
 import { PATHS } from '@/src/utils/routes/paths';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 
 export default function MonitorDetails() {
+  const [range, setRange] = useState<'24h' | '7d' | '30d' | "1h">('24h');
+  const [checksPage, setChecksPage] = useState(0);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const pageSize = 15;
+
   const { monitorId } = useParams<{ monitorId: string }>();
   const navigate = useNavigate();
   const safeMonitorId = monitorId || '';
-
-  const [range, setRange] = useState<'24h' | '7d' | '30d' | "1h">('24h');
-  const [checksPage, setChecksPage] = useState(0);
-  const pageSize = 15;
 
   const detailsQuery = useMonitorDetails(safeMonitorId);
   const statsQuery = useMonitorStatistics(safeMonitorId);
@@ -100,13 +102,16 @@ export default function MonitorDetails() {
     }
   };
 
-  const handleDelete = () => {
+
+  const handleDeleteClick = () => {
     if (!monitor) return;
-    if (confirm(`Are you sure you want to delete '${monitor.name}'? All history metrics will be wiped.`)) {
-      deleteMutation.mutate(safeMonitorId, {
-        onSuccess: () => navigate(PATHS.DASHBOARD.MONITORS.LIST),
-      });
-    }
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteMutation.mutate(safeMonitorId, {
+      onSuccess: () => navigate(PATHS.DASHBOARD.MONITORS.LIST),
+    });
   };
 
   const handleToggle = () => {
@@ -137,7 +142,7 @@ export default function MonitorDetails() {
           monitor={monitor}
           onExportCsv={handleDownloadLogs}
           onToggle={handleToggle}
-          onDelete={handleDelete}
+          onDelete={handleDeleteClick}
           isExportDisabled={checksData.length === 0}
           isTogglePending={toggleMutation.isPending}
           isDeletePending={deleteMutation.isPending}
@@ -184,6 +189,16 @@ export default function MonitorDetails() {
 
         <MonitorIncidentsSidebar incidents={incidents} isLoading={incidentsQuery.isLoading} />
       </div>
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title={`Delete '${monitor?.name || 'Monitor'}'`}
+        description="Are you sure you want to delete this monitor? All recorded health checks, latency history metrics, and incident records will be removed."
+        confirmText="Delete Monitor"
+        cancelText="Cancel"
+        variant="danger"
+      />
     </div>
   );
 }

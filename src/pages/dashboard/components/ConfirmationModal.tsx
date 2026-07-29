@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ShieldAlert, X, AlertTriangle, Info } from 'lucide-react';
+import { AlertTriangle, Info, ShieldAlert, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect } from 'react';
 
 interface ConfirmationModalProps {
   id?: string;
@@ -25,8 +25,8 @@ export function ConfirmationModal({
   cancelText = 'Cancel',
   variant = 'danger'
 }: ConfirmationModalProps) {
-  
-  // Disable body scroll when modal is active
+
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -81,7 +81,7 @@ export function ConfirmationModal({
             id={`${id}-backdrop`}
           />
 
-          {/* Modal Card Frame */}
+
           <motion.div
             initial={{ scale: 0.95, y: 10, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -90,13 +90,12 @@ export function ConfirmationModal({
             className="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full shadow-2xl relative overflow-hidden z-10 font-sans"
             id={`${id}-card`}
           >
-            {/* Top accent visual bar */}
             <div className={`absolute top-0 left-0 w-full h-1 ${styles.accentBar}`} />
 
-            {/* Header / Dismiss */}
+
             <div className="p-4 border-b border-slate-850/60 bg-slate-950/25 flex items-center justify-between">
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-semibold">
-                Authorization Challenge
+                Action Required
               </span>
               <button
                 onClick={onClose}
@@ -108,7 +107,7 @@ export function ConfirmationModal({
               </button>
             </div>
 
-            {/* Content Body */}
+
             <div className="p-6 space-y-4">
               <div className="flex gap-4">
                 <div className={`w-12 h-12 rounded-lg border flex items-center justify-center shrink-0 ${styles.bgIcon}`}>
@@ -124,14 +123,14 @@ export function ConfirmationModal({
                 </div>
               </div>
 
-              {/* Cyber Audit Warning Indicator */}
+
               <div className="p-3 bg-slate-950 border border-slate-850 rounded-lg text-[10px] text-slate-405 font-mono leading-relaxed">
-                <span className="text-rose-400 font-semibold">[Warning]:</span> This instruction triggers manual access revocation and key invalidation in the consensus store. Active routing entries will be terminated immediately.
+                <span className="text-rose-400 font-semibold">[Warning]:</span> Proceeding with this action will execute the operation immediately. Associated data and configuration states cannot be recovered once confirmed.
               </div>
             </div>
 
             {/* Footer Buttons */}
-            <div className="p-4 bg-slate-950/40 border-t border-slate-850/60 flex items-center justify-end gap-2.5">
+            <div className="p-4 bg-slate-950/40 border-t border-slate-850/60 flex flex-wrap items-center justify-end gap-2.5">
               <button
                 type="button"
                 onClick={onClose}

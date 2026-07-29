@@ -1,7 +1,7 @@
 
-import { ArrowRight, CheckCircle } from "lucide-react";
 import type { IncidentDTO } from "@/src/types/incident";
-import { getIncidentTitle, formatDuration } from "../utils";
+import { ArrowRight, CheckCircle } from "lucide-react";
+import { getIncidentTitle } from "../utils";
 import { ActiveOutagesSkeleton } from "./skeletons/ActiveOutagesSkeleton";
 
 interface Props {

@@ -1,9 +1,9 @@
 
 import { MonitorResponse } from "@/src/types/dashboard";
-import { Loader2, Pause, Play } from "lucide-react";
-import { useToggleMonitor } from "../monitor/hooks/use-monitor";
-import { useNavigate } from "react-router-dom";
 import { PATHS } from "@/src/utils/routes/paths";
+import { Pause, Play } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useToggleMonitor } from "../monitor/hooks/use-monitor";
 
 export function MonitorRow({ m }: { m: MonitorResponse }) {
     const navigate = useNavigate();

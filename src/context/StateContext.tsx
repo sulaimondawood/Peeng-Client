@@ -42,7 +42,6 @@ export function StateProvider({ children }: { children: ReactNode }) {
 
 
 
-  // Enforce dark mode on HTML element
   useEffect(() => {
     document.documentElement.classList.add('dark');
   }, []);
