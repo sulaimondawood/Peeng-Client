@@ -66,7 +66,6 @@ export function useToggleMonitor() {
 
     return useMutation({
         mutationFn: (monitorId: string) => monitorApi.toggleState(monitorId),
-
         onSuccess: (data) => {
             addToast(data.message || "Monitor updated", "success");
             queryClient.invalidateQueries({ queryKey: ["dashboard", "monitors", "recent"] });
@@ -83,11 +82,18 @@ export function useToggleMonitor() {
 
 export function useDeleteMonitor() {
     const queryClient = useQueryClient();
+    const { addToast } = useAppState();
+
     return useMutation({
         mutationFn: (monitorId: string) => monitorApi.deleteMonitor(monitorId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["monitors"] });
 
+        },
+        onError: (error: AxiosError<any>) => {
+            const message =
+                error.response?.data?.message || "Failed to toggle monitor";
+            addToast(message, "error");
         },
     });
 }

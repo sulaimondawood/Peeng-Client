@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Activity, Pause, Play, Plus, Search, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Activity, Pause, Play, Plus, Search, Trash2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { MonitorFilterSkeleton } from "./_components/skeleton/MonitorFilterSkeleton";
 import { MonitorListSkeleton } from "./_components/skeleton/MonitorListSkeleton";
 import { useDeleteMonitor, useMonitors, useToggleMonitor } from "./hooks/use-monitor";
 import { useDebounce } from "@/src/hooks/use-debounce";
 import { PATHS } from "@/src/utils/routes/paths";
+import { ConfirmationModal } from "../components/ConfirmationModal";
+import { MonitorResponse } from "@/src/types/dashboard";
 
 export default function MonitorList() {
   const navigate = useNavigate();
@@ -16,8 +18,10 @@ export default function MonitorList() {
   const pageNoParam = parseInt(searchParams.get("pageNo") || "0", 10);
   const pageSize = 25;
 
-
   const [searchInput, setSearchInput] = useState(keywordParam);
+  const [monitorToDelete, setMonitorToDelete] = useState<MonitorResponse | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+
   const debouncedSearchInput = useDebounce(searchInput, 500);
 
 
@@ -82,15 +86,24 @@ export default function MonitorList() {
     navigate(PATHS.DASHBOARD.MONITORS.DETAILS(id));
   };
 
-  const handleDelete = (id: string, e: React.MouseEvent) => {
+
+  const handleDeleteClick = (monitor: MonitorResponse, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm("Are you sure you want to delete this monitor and wipe its telemetry history?")) {
-      deleteMutation.mutate(id);
-    }
+    setMonitorToDelete(monitor);
   };
+
+
+  const handleConfirmDelete = () => {
+    if (!monitorToDelete) return;
+    deleteMutation.mutate(monitorToDelete.id, {
+      onSettled: () => setMonitorToDelete(null),
+    });
+  };
+
 
   const handleToggle = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    setTogglingId(id);
     toggleMutation.mutate(id);
   };
 
@@ -198,68 +211,74 @@ export default function MonitorList() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-900">
-                {monitors.map((m) => (
-                  <tr
-                    key={m.id}
-                    onClick={() => handleSelectMonitor(m.id)}
-                    className="hover:bg-zinc-900/50 transition-colors cursor-pointer group text-xs text-zinc-300"
-                  >
-                    <td className="py-3.5 px-4 font-semibold text-white group-hover:text-zinc-200">
-                      {m.name}
-                    </td>
+                {monitors.map((m) => {
+                  const isRowToggling = toggleMutation.isPending && togglingId === m.id;
 
-                    <td className="py-3.5 px-4 font-mono text-[11px] text-zinc-500">
-                      <span className="truncate max-w-xs block">{m.url}</span>
-                    </td>
+                  return (
+                    <tr
+                      key={m.id}
+                      onClick={() => handleSelectMonitor(m.id)}
+                      className="hover:bg-zinc-900/50 transition-colors cursor-pointer group text-xs text-zinc-300"
+                    >
+                      <td className="py-3.5 px-4 font-semibold text-white group-hover:text-zinc-200">
+                        {m.name}
+                      </td>
 
-                    <td className="py-3.5 px-4">
-                      <StatusBadge status={m.status} lifecycle={m.lifecycle} />
-                    </td>
+                      <td className="py-3.5 px-4 font-mono text-[11px] text-zinc-500">
+                        <span className="truncate max-w-xs block">{m.url}</span>
+                      </td>
 
-                    <td className="py-3.5 px-4 font-mono text-[10px] text-zinc-400 uppercase">
-                      {m.method}
-                    </td>
+                      <td className="py-3.5 px-4">
+                        <StatusBadge status={m.status} lifecycle={m.lifecycle} />
+                      </td>
 
-                    <td className="py-3.5 px-4 font-mono text-[11px] text-zinc-400">
-                      {m.intervalInSeconds}s
-                    </td>
+                      <td className="py-3.5 px-4 font-mono text-[10px] text-zinc-400 uppercase">
+                        {m.method}
+                      </td>
 
-                    <td className="py-3.5 px-4 font-mono text-[11px]">
-                      {m.lifecycle === "PAUSED" || m.latestResponseTimeMs === null ? (
-                        <span className="text-zinc-600">—</span>
-                      ) : (
-                        <span className="text-zinc-200 font-semibold">
-                          {m.latestResponseTimeMs} ms
-                        </span>
-                      )}
-                    </td>
+                      <td className="py-3.5 px-4 font-mono text-[11px] text-zinc-400">
+                        {m.intervalInSeconds}s
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <button
-                          onClick={(e) => handleToggle(m.id, e)}
-                          disabled={toggleMutation.isPending}
-                          className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
-                          title={m.lifecycle === "PAUSED" ? "Resume Monitor" : "Pause Monitor"}
-                        >
-                          {m.lifecycle === "PAUSED" ? (
-                            <Play className="w-3.5 h-3.5 text-emerald-400" />
-                          ) : (
-                            <Pause className="w-3.5 h-3.5 text-amber-400" />
-                          )}
-                        </button>
-                        <button
-                          onClick={(e) => handleDelete(m.id, e)}
-                          disabled={deleteMutation.isPending}
-                          className="p-1.5 rounded hover:bg-zinc-800 hover:text-red-400 text-zinc-500 transition-colors cursor-pointer"
-                          title="Delete Monitor"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="py-3.5 px-4 font-mono text-[11px]">
+                        {m.lifecycle === "PAUSED" || m.latestResponseTimeMs === null ? (
+                          <span className="text-zinc-600">—</span>
+                        ) : (
+                          <span className="text-zinc-200 font-semibold">
+                            {m.latestResponseTimeMs} ms
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={(e) => handleToggle(m.id, e)}
+                            disabled={isRowToggling}
+                            className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+                            title={m.lifecycle === "PAUSED" ? "Resume Monitor" : "Pause Monitor"}
+                          >
+                            {isRowToggling ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
+                            ) : m.lifecycle === "PAUSED" ? (
+                              <Play className="w-3.5 h-3.5 text-emerald-400" />
+                            ) : (
+                              <Pause className="w-3.5 h-3.5 text-amber-400" />
+                            )}
+                          </button>
+                          <button
+                            onClick={(e) => handleDeleteClick(m, e)}
+                            disabled={deleteMutation.isPending}
+                            className="p-1.5 rounded hover:bg-zinc-800 hover:text-red-400 text-zinc-500 transition-colors cursor-pointer"
+                            title="Delete Monitor"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -290,6 +309,16 @@ export default function MonitorList() {
           )}
         </div>
       )}
+      <ConfirmationModal
+        isOpen={!!monitorToDelete}
+        onClose={() => setMonitorToDelete(null)}
+        onConfirm={handleConfirmDelete}
+        title={`Delete '${monitorToDelete?.name || 'Monitor'}'`}
+        description="Are you sure you want to delete this monitor? All recorded health checks, latency history metrics, and incident records will be permanently wiped."
+        confirmText="Delete Monitor"
+        cancelText="Cancel"
+        variant="danger"
+      />
     </div>
   );
 }

@@ -18,10 +18,13 @@ import {
 } from './hooks/use-team';
 import { RoleType } from '@/src/types/auth';
 import { useState } from 'react';
+import { MembershipDTO } from '@/src/types/team';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 
 export default function TeamDashboardPage() {
   const [resendingId, setResendingId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
+  const [memberToRemove, setMemberToRemove] = useState<MembershipDTO | null>(null);
 
   const { data: members = [], isLoading: isMembersLoading } = useTeamMembers();
   const { data: overview, isLoading: isOverviewLoading } = useTeamOverview();
@@ -41,26 +44,30 @@ export default function TeamDashboardPage() {
 
   const handleResendInvite = (membershipId: string) => {
     setResendingId(membershipId);
-    resendMutation.mutate(membershipId);
     resendMutation.mutate(membershipId, {
       onSettled: () => setResendingId(null),
     });
   };
 
-  const handleRemove = (id: string) => {
+
+  const handleRemoveClick = (id: string) => {
     const member = members.find((m) => m.id === id);
     if (!member) return;
-
-    const isPending = member.status === 'INVITED';
-    const message = isPending
-      ? `Are you sure you want to revoke the pending invite for ${member.email}?`
-      : `Are you sure you want to remove ${member.name || member.email} from this workspace?`;
-
-    if (confirm(message)) {
-      removeMutation.mutate(id);
-
-    }
+    setMemberToRemove(member);
   };
+
+  const handleConfirmRemove = () => {
+    if (!memberToRemove) return;
+    setRemovingId(memberToRemove.id);
+    removeMutation.mutate(memberToRemove.id, {
+      onSettled: () => {
+        setRemovingId(null);
+        setMemberToRemove(null);
+      },
+    });
+  };
+
+  const isPendingInvite = memberToRemove?.status === 'INVITED';
 
 
   if (isMembersLoading && isOverviewLoading) {
@@ -157,7 +164,7 @@ export default function TeamDashboardPage() {
             <OperatorRosterTable
               members={members}
               onRoleChange={handleRoleChange}
-              onRemove={handleRemove}
+              onRemove={handleRemoveClick}
               onResendInvite={handleResendInvite}
               resendingId={resendingId}
               removingId={removingId}
@@ -184,6 +191,24 @@ export default function TeamDashboardPage() {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={!!memberToRemove}
+        onClose={() => setMemberToRemove(null)}
+        onConfirm={handleConfirmRemove}
+        title={
+          isPendingInvite
+            ? `Revoke Invitation for ${memberToRemove?.email}`
+            : `Remove ${memberToRemove?.name || memberToRemove?.email}`
+        }
+        description={
+          isPendingInvite
+            ? `Are you sure you want to revoke the pending invite for ${memberToRemove?.email}? They will no longer be able to use the invitation link.`
+            : `Are you sure you want to remove ${memberToRemove?.name || memberToRemove?.email} from this workspace? They will immediately lose access to all monitors, telemetry data, and settings.`
+        }
+        confirmText={isPendingInvite ? 'Revoke Invite' : 'Remove Member'}
+        cancelText="Cancel"
+        variant="danger"
+      />
     </div>
   );
 }

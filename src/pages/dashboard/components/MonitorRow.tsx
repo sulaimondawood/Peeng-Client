@@ -1,7 +1,7 @@
 
 import { MonitorResponse } from "@/src/types/dashboard";
 import { PATHS } from "@/src/utils/routes/paths";
-import { Pause, Play } from "lucide-react";
+import { Loader2, Pause, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToggleMonitor } from "../monitor/hooks/use-monitor";
 
@@ -10,6 +10,7 @@ export function MonitorRow({ m }: { m: MonitorResponse }) {
 
     const toggleMonitor = useToggleMonitor();
     const isPaused = m.lifecycle === "PAUSED";
+    const isPending = toggleMonitor.isPending;
 
     const viewMonitor = (id: string) => {
         navigate(PATHS.DASHBOARD.MONITORS.DETAILS(id));
@@ -64,7 +65,13 @@ export function MonitorRow({ m }: { m: MonitorResponse }) {
                         className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
                         title={m.status === 'PAUSED' ? 'Resume Monitor' : 'Pause Monitor'}
                     >
-                        {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5" />}
+                        {isPending ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-400" />
+                        ) : isPaused ? (
+                            <Play className="w-3.5 h-3.5 text-emerald-400" />
+                        ) : (
+                            <Pause className="w-3.5 h-3.5 text-amber-400" />
+                        )}
                     </button>
                 </div>
             </div>
